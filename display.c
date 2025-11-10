@@ -1,38 +1,11 @@
 #include <stdlib.h>
+
+// Checks if you are using linux because ncurses have different path on linux than windows
+#ifdef linux
 #include <ncurses.h>
-
-/* DIALOGUE */
-void dialogue()
-{
-    start_color();
-    // Dialogue text - White text / Blue background
-    init_pair(3,COLOR_BLACK,COLOR_CYAN);
-
-    // Creates the colored box
-    for (int x = 0; x < 153; x++)
-    {
-        for (int y = 0; y < 34; y++)
-        {
-            move(y,x);
-            if (x >= 25 && x <= 127)
-            {
-                if (y >= 17 && y <=22)
-                {
-                    attron(COLOR_PAIR(3));
-                    addch(' ');
-                    attroff(COLOR_PAIR(3));
-                }
-            }
-        }
-    }
-
-    
-
-}
-
-
-
-
+#else
+#include <ncurses\ncurses.h>
+#endif
 
 /* DISPLAYS */
 
@@ -82,9 +55,12 @@ void bordercreate()
     }
 }
 
+/*
+    This function display the main menu
+    @param index is a pointer to index which tells which button is selected
+*/
 void mainmenu(int *index)
 {
-    clear();
     bordercreate(); // Calls bordercreate function
     // Display the Controls
     mvprintw(33, 36, "| [^][v][<][>] - USE ARROW KEYS TO MOVE |-------| [ENTER] - TO SELECT AN OPTION |");
@@ -204,76 +180,88 @@ void mainmenu(int *index)
     attroff(COLOR_PAIR(2));
 }
 
+/*
+    This function creates the UI for the gameloop
+    @param day - time of day [1]-Morning, [2]-Afternoon, [3]-Evening
+    @param daycount - number of day
+    @param outing - where the outing is gonna be [1]-Park, [2]-City Mall, [3]-Ostania Beach, [4]-West Berlint Aquarium, [5]-Ostania Art Museum, [6]-Berlint Mouseney Land, [7]-Park Avenue Dogland
+    @param mathLVL - Math level [1],[2],[3],[4](MAX)
+    @param mathEXP - Math exp
+    @param peLVL - PE level [1],[2],[3],[4](MAX)
+    @param peEXP - PE exp
+    @param damianBP - Damian Desmond BP
+    @param beckyBP - Becky Blackbell BP
+    @param hendersonBP - Mr. Henderson BP
+    @param bondBP - Bond Forger BP
+*/
 void mainUI(int* day, int* daycount, int* outing, int* activityPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP)
 {
-    clear();        // Clears everything on the screen
-    bordercreate(); // Calls bordercreate function
-    refresh();      // Refreshes the screen (loads what it needs to load)
+    bordercreate();
 
     // Display Controls
     mvprintw(33, 18, "| [^][v][<][>] - USE ARROW KEYS TO MOVE |-------| [ENTER] - TO SELECT AN OPTION |-------| [q/Q] - BACK TO MAIN MENU |");
     
     /* Display the Daycount, Time of Day, Type of Day */
     switch (*day) // Sets Time of Day: 1-Morning, 2-Afternoon, 3-Evening
-    {
+    { // Extra spaces for removing excess from previous
         case 1:
-            mvprintw(2,2,"Day:   %02d - Morning",*daycount);
+            mvprintw(2,2,"Day:   %02d - %-10s",*daycount,"Morning");
             break;
         case 2:
-            mvprintw(2,2,"Day:   %02d - Afternoon",*daycount);
+            mvprintw(2,2,"Day:   %02d - %-10s",*daycount,"Afternoon");
             break;
         case 3:
-            mvprintw(2,2,"Day:   %02d - Evening",*daycount);
+            mvprintw(2,2,"Day:   %02d - %-10s",*daycount,"Evening");
             break;
         default:
-            mvprintw(2,2,"Day:   %02d - ERROR",*daycount);
+            mvprintw(2,2,"Day:   %02d - %-10s",*daycount,"ERROR");
             break;
     }
     // Checks whether it is School day or Outing Day or MEETING
     if (*daycount == 0 || (*daycount % 4 == 0 && *day == 3))
-    {
-        mvprintw(3,9,"FAMILY MEETING");
+    { // Extra spaces for removing excess from previous
+        mvprintw(3,9,"FAMILY MEETING ");
     } else if (*daycount % 4 == 0)
     {
-        mvprintw(3,9,"OUTING DAY");
+        mvprintw(3,9,"%-16s","OUTING DAY");
     } else
     {
-        mvprintw(3,9,"SCHOOL DAY");
+        mvprintw(3,9,"%-16s","SCHOOL DAY");
     }
 
     /* Display the next outing venue */
     mvprintw(5,2, "Next Outing Venue:");
     // Checks whether what is the next outing place
-    switch (*outing)
-    {
+    switch (*outing) 
+    { // Extra spaces for removing excess from previous
         case 1:
-            mvprintw(6,7,"Park");
+            mvprintw(6,7,"%-25s","Park");
             break;
         case 2:
-            mvprintw(6,7,"City Mall");
+            mvprintw(6,7,"%-25s","City Mall");
             break;
         case 3:
-            mvprintw(6,7,"Ostania Beach");
+            mvprintw(6,7,"%-25s","Ostania Beach");
             break;
         case 4:
-            mvprintw(6,7,"West Berlint Aquarium");
+            mvprintw(6,7,"%-25s","West Berlint Aquarium");
             break;
         case 5:
-            mvprintw(6,7,"Ostania Art Museum");
+            mvprintw(6,7,"%-25s","Ostania Art Museum");
             break;
         case 6:
-            mvprintw(6,7,"Berlint Mouseney Land");
+            mvprintw(6,7,"%-25s","Berlint Mouseney Land");
             break;
         case 7:
-            mvprintw(6,7,"Park Avenue Dogland");
+            mvprintw(6,7,"%-25s","Park Avenue Dogland");
             break;
         default:
-            mvprintw(6,7,"Nothing");
+            mvprintw(6,7,"%-25s","Undecided");
             break;
     }
 
     /* Activity Points */
-    mvprintw(8,2,"ACTIVITY POINTS: %d", *activityPoint);
+    mvprintw(8,2,"ACTIVITY POINTS: %2d", *activityPoint);
 
     /* Camera Rolls */
     mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);
@@ -337,4 +325,34 @@ void mainUI(int* day, int* daycount, int* outing, int* activityPoint, int* camer
     }
 
     refresh();
+}
+
+
+/* DIALOGUE */
+void dialoguefunc()
+{
+    // start_color();
+    // // Dialogue text - White text / Blue background
+    // init_pair(3,COLOR_BLACK,COLOR_CYAN);
+
+    // // Creates the colored box
+    // for (int x = 0; x < 153; x++)
+    // {
+    //     for (int y = 0; y < 34; y++)
+    //     {
+    //         move(y,x);
+    //         if (x >= 25 && x <= 127)
+    //         {
+    //             if (y >= 17 && y <=22)
+    //             {
+    //                 attron(COLOR_PAIR(3));
+    //                 addch(' ');
+    //                 attroff(COLOR_PAIR(3));
+    //             }
+    //         }
+    //     }
+    // }
+
+    
+
 }
