@@ -186,7 +186,7 @@ int mathGame(int* mathLVL, int* mathEXP)
             correct += 1;
         }
 
-        mvprintw(20,50,"                                           ");
+        mvprintw(20,50,"%50c",' ');
 
     }
 
@@ -584,4 +584,29 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
     }
 
     return additionalAP;
+}
+
+/*
+    This function is the memorable minigame
+*/
+int memorableGame(int *outing, char *outingCode)
+{
+    /* 1000,0000,0000,0000,0000,0000,0000*/
+    int seed;
+
+    switch (*outing)
+    {
+    case 1:
+        seed = 1;
+        break;
+    
+    default:
+        break;
+    }
+
+    srand(seed);
+    int a = randomValue(0,50);
+    mvprintw(20,20,"%d",a);
+
+    return 0;
 }

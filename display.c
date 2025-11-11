@@ -57,7 +57,7 @@ void bordercreate()
 
 /*
     This function display the main menu
-    @param index is a pointer to index which tells which button is selected
+    @param *index is a pointer to index which tells which button is selected
 */
 void mainmenu(int *index)
 {
@@ -182,17 +182,17 @@ void mainmenu(int *index)
 
 /*
     This function creates the UI for the gameloop
-    @param day - time of day [1]-Morning, [2]-Afternoon, [3]-Evening
-    @param daycount - number of day
-    @param outing - where the outing is gonna be [1]-Park, [2]-City Mall, [3]-Ostania Beach, [4]-West Berlint Aquarium, [5]-Ostania Art Museum, [6]-Berlint Mouseney Land, [7]-Park Avenue Dogland
-    @param mathLVL - Math level [1],[2],[3],[4](MAX)
-    @param mathEXP - Math exp
-    @param peLVL - PE level [1],[2],[3],[4](MAX)
-    @param peEXP - PE exp
-    @param damianBP - Damian Desmond BP
-    @param beckyBP - Becky Blackbell BP
-    @param hendersonBP - Mr. Henderson BP
-    @param bondBP - Bond Forger BP
+    @param *day - time of day [1]-Morning, [2]-Afternoon, [3]-Evening
+    @param *daycount - number of day
+    @param *outing - where the outing is gonna be [1]-Park, [2]-City Mall, [3]-Ostania Beach, [4]-West Berlint Aquarium, [5]-Ostania Art Museum, [6]-Berlint Mouseney Land, [7]-Park Avenue Dogland
+    @param *mathLVL - Math level [1],[2],[3],[4](MAX)
+    @param *mathEXP - Math exp
+    @param *peLVL - PE level [1],[2],[3],[4](MAX)
+    @param *peEXP - PE exp
+    @param *damianBP - Damian Desmond BP
+    @param *beckyBP - Becky Blackbell BP
+    @param *hendersonBP - Mr. Henderson BP
+    @param *bondBP - Bond Forger BP
 */
 void mainUI(int* day, int* daycount, int* outing, int* activityPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP)
 {
