@@ -12,7 +12,7 @@
 
 /*********************************************
 Functions used in ncurses:
-    mvprintw(y,x,"%d",1)                    - Moves to (x,y) position and prints "1"
+    mvprintw(y,x,"%d",1)                    - Moves to (x,y) position and prints 1
     init_pair(1,COLOR_BLACK,COLOR_WHITE)    - Initialize a pair with a keyword 1 that have Black as Foreground and White as Background
     scanw()                                 - Same scanf() but for ncurses
     attron(COLOR_PAIR(1))                   - Gives the attribute pair, that have keyword 1, to the proceeding print
@@ -37,9 +37,9 @@ Functions used in ncurses:
     @param *beckyBP - Becky Blackbell BP
     @param *hendersonBP - Mr. Henderson BP
     @param *bondBP - Bond Forger BP
-    @param *outingCode - Code number for the outing minigame
+    @param *code - Outing Code Seed
 */
-void savegame(char* name, int* day, int* daycount, int* outing, int* actionPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP, char *outingCode)
+void savegame(char* name, int* day, int* daycount, int* outing, int* actionPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP, int* code, int* Cout1, int* Cout2, int* Cout3, int* Cout4, int* Cout5, int* Cout6, int* Cout7)
 {
     FILE *fptr; // Initiate file
 
@@ -47,7 +47,7 @@ void savegame(char* name, int* day, int* daycount, int* outing, int* actionPoint
     fptr = fopen(name, "w");
 
     // Saves all the data in different line
-    fprintf(fptr, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%s", *day, *daycount, *outing, *actionPoint, *cameraRoll, *mathLVL, *mathEXP, *peLVL, *peEXP, *damianBP, *beckyBP, *hendersonBP, *bondBP, outingCode);
+    fprintf(fptr, "%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d", *day, *daycount, *outing, *actionPoint, *cameraRoll, *mathLVL, *mathEXP, *peLVL, *peEXP, *damianBP, *beckyBP, *hendersonBP, *bondBP, *code, *Cout1, *Cout2, *Cout3, *Cout4, *Cout5, *Cout6, *Cout7);
 
     fclose(fptr); // Closes the file
 }
@@ -67,9 +67,9 @@ void savegame(char* name, int* day, int* daycount, int* outing, int* actionPoint
     @param *beckyBP - Becky Blackbell BP
     @param *hendersonBP - Mr. Henderson BP
     @param *bondBP - Bond Forger BP
-    @param *outingCode - Code numbers for the outing minigame
+    @param *code - Outing Code Seed
 */
-void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP, char* outingCode)
+void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP, int* code, int* Cout1, int* Cout2, int* Cout3, int* Cout4, int* Cout5, int* Cout6, int* Cout7)
 {
     // Starts the color
     start_color();
@@ -260,7 +260,6 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                     break;
                 case 7:
                     mvprintw(26,50,"%-50s","> Park Avenue Dogland");
-                    memorableGame(outing, outingCode);
                     if (*bondBP != 5)
                     {
                         mvprintw(26,75,"- LOCKED");
@@ -375,14 +374,45 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                         }
                     } else
                     {
-                        if (dialogue != 1) // Check if there is a dialoge
+                        if (dialogue != 1) // Check if there is a dialogue
                         {
                             if (*day == 1) // Check whether its Morning or Afternoon or Evening (Family Meeting)
                             {
-
+                                // Do some dialogue
                             } else if (*day == 2)
                             {
+                                if (index == 1)
+                                {
+                                    // Starts the memorable minigame
+                                    switch (*outing)
+                                    {
+                                    case 1:
+                                        memorableGame(cameraRoll, outing, code, Cout1);
+                                        break;
+                                    case 2:
+                                        memorableGame(cameraRoll, outing, code, Cout2);
+                                        break;
+                                    case 3:
+                                        memorableGame(cameraRoll, outing, code, Cout3);
+                                        break;
+                                    case 4:
+                                        memorableGame(cameraRoll, outing, code, Cout4);
+                                        break;
+                                    case 5:
+                                        memorableGame(cameraRoll, outing, code, Cout5);
+                                        break;
+                                    case 6:
+                                        memorableGame(cameraRoll, outing, code, Cout6);
+                                        break;
+                                    case 7:
+                                        memorableGame(cameraRoll, outing, code, Cout7);
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                }
 
+                                *outing = 0;        // memorable is over, choose again
                             } else
                             {
                                 // Set the venue of the next Outing to whatever index is
@@ -430,6 +460,8 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     *outing = index;
                                     break;
                                 }
+
+                                *cameraRoll = 5;    // Refill
                             }
                         }
                     }
@@ -441,7 +473,7 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
 
                 case 'Q':       // Capital Q
                 case 'q':       // Q
-                    savegame(name, day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP, outingCode);
+                    savegame(name, day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP, code, Cout1, Cout2, Cout3, Cout4, Cout5, Cout6, Cout7);
                     quit = 1;
                     break;
                 default:
@@ -466,6 +498,8 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
             *actionPoint += 1;
         }
 
+        dialoguefunc();
+
         *daycount += 1; // Next Day
         *day = 1;       // Go back to Morning
 
@@ -487,7 +521,7 @@ void startgame()
 {
     echo();
 
-    char name[25];
+    char name[30] = "TemporaryFile";
     int day = 3;
     int daycount = 0;
     int outing = 0;
@@ -501,15 +535,22 @@ void startgame()
     int beckyBP = 0;
     int hendersonBP = 0;
     int bondBP = 0;
-    char outingCode[] = "0000000000000000000000000000";
+    int code = 0;
+    int Cout1 = 0;
+    int Cout2 = 0;
+    int Cout3 = 0;
+    int Cout4 = 0;
+    int Cout5 = 0;
+    int Cout6 = 0;
+    int Cout7 = 0;
 
-    mvprintw(10,20,"Enter File Name (No Spaces) (Leaving it black creates a dummy file (aka will not save)): ");
+    mvprintw(10,20,"Enter File Name (No Spaces) (Default: TemporaryFile): ");
     scanw("%s", name);
 
     noecho();
 
     clear();    // Cleans the screen (removes the main menu)
-    gameloop(name, &day, &daycount, &outing, &activityPoint, &cameraRoll, &mathLVL, &mathEXP, &peLVL, &peEXP, &damianBP, &beckyBP, &hendersonBP, &bondBP, outingCode);
+    gameloop(name, &day, &daycount, &outing, &activityPoint, &cameraRoll, &mathLVL, &mathEXP, &peLVL, &peEXP, &damianBP, &beckyBP, &hendersonBP, &bondBP, &code, &Cout1, &Cout2, &Cout3, &Cout4, &Cout5, &Cout6, &Cout7);
 }
 
 /*
@@ -537,7 +578,14 @@ void loadgame()
     int beckyBP = 0;
     int hendersonBP = 0;
     int bondBP = 0;
-    char outingCode[30];
+    int code = 0;
+    int Cout1 = 0;
+    int Cout2 = 0;
+    int Cout3 = 0;
+    int Cout4 = 0;
+    int Cout5 = 0;
+    int Cout6 = 0;
+    int Cout7 = 0;
 
     while (quit != 1)
     {
@@ -558,7 +606,7 @@ void loadgame()
         } else
         {
             // Checks everyline and assign it to the variables
-            for (int i = 1; i<=14; i++)
+            for (int i = 1; i<=21; i++)
             {
                 switch (i)
                 {
@@ -615,17 +663,47 @@ void loadgame()
                     bondBP = atoi(buffer);
                     break;
                 case 14:
-                    fgets(outingCode, 30, fptr);
+                    fgets(buffer, 30, fptr);
+                    code = atoi(buffer);
+                    break;
+                case 15:
+                    fgets(buffer, 30, fptr);
+                    Cout1 = atoi(buffer);
+                    break;
+                case 16:
+                    fgets(buffer, 30, fptr);
+                    Cout2 = atoi(buffer);
+                    break;
+                case 17:
+                    fgets(buffer, 30, fptr);
+                    Cout3 = atoi(buffer);
+                    break;
+                case 18:
+                    fgets(buffer, 30, fptr);
+                    Cout4 = atoi(buffer);
+                    break;
+                case 19:
+                    fgets(buffer, 30, fptr);
+                    Cout5 = atoi(buffer);
+                    break;
+                case 20:
+                    fgets(buffer, 30, fptr);
+                    Cout6 = atoi(buffer);
+                    break;
+                case 21:
+                    fgets(buffer, 30, fptr);
+                    Cout7 = atoi(buffer);
                     break;
                 default:
                     break;
                 }
 
             }
-            fclose(fptr);
-            clear();
+
+            fclose(fptr);   // Closes the file and saves it
+            clear();        // clears the main menu UI
             quit = 1;
-            gameloop(name, &day, &daycount, &outing, &activityPoint, &cameraRoll, &mathLVL, &mathEXP, &peLVL, &peEXP, &damianBP, &beckyBP, &hendersonBP, &bondBP, outingCode);
+            gameloop(name, &day, &daycount, &outing, &activityPoint, &cameraRoll, &mathLVL, &mathEXP, &peLVL, &peEXP, &damianBP, &beckyBP, &hendersonBP, &bondBP, &code, &Cout1, &Cout2, &Cout3, &Cout4, &Cout5, &Cout6, &Cout7);
         }
     }
     mvprintw(10,20,"%50c", ' '); // Fill with Empty Space

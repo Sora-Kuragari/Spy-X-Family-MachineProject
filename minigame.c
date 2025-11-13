@@ -589,24 +589,51 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
 /*
     This function is the memorable minigame
 */
-int memorableGame(int *outing, char *outingCode)
+int memorableGame(int *cameraRoll, int *outing, int *code, int *closestGuess)
 {
-    /* 1000,0000,0000,0000,0000,0000,0000*/
-    int seed;
+    int outingCode = 0;
+    int guess;
 
-    switch (*outing)
+    // If code doesn't exist then generate one
+    mvprintw(20,20,"%d", *code);
+    if (*code == 0)
     {
-    case 1:
-        seed = 1;
-        break;
-    
-    default:
-        break;
+        *code = time(0);
+    }
+    mvprintw(20,20,"%d", *code);
+
+    srand(*code);       // Sets the seed
+
+    // Loops until the outing venue's code
+    for (int i = 0; i < *outing; i++)
+    {
+        outingCode = randomValue(0,1000);
     }
 
-    srand(seed);
-    int a = randomValue(0,50);
-    mvprintw(20,20,"%d",a);
+    for (int i = *cameraRoll; i > 0; i--)
+    {
+        scanw("%d", &guess);
+        
+        if (guess == outingCode)
+        {
+            // PERFECT
+        } else if ((guess + 10 >= outingCode) && (guess - 10 <= outingCode))
+        {
+            // VERY GOOD
+        } else if ((guess + 100 >= outingCode) && (guess - 100 <= outingCode))
+        {
+            // OKAY
+        } else
+        {
+            // NOT GOOD
+        }
+
+        *cameraRoll = *cameraRoll - 1;
+        mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);   // Refreshes the display whenever a camera roll is used
+        refresh();
+    }
+
+    mvprintw(20,20,"%d",outingCode);
 
     return 0;
 }
