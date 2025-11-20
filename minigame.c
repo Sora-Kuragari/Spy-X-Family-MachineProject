@@ -610,22 +610,26 @@ int memorableGame(int *cameraRoll, int *outing, int *code, int *closestGuess)
         outingCode = randomValue(0,1000);
     }
 
-    for (int i = *cameraRoll; i > 0; i--)
+    for (int i = *cameraRoll; i > 0 && guess != outingCode; i--)
     {
         scanw("%d", &guess);
         
         if (guess == outingCode)
         {
             // PERFECT
-        } else if ((guess + 10 >= outingCode) && (guess - 10 <= outingCode))
+            mvprintw(20,20,"PERFECT");
+        } else if (guess >= outingCode - 10 && guess <= outingCode + 10)
         {
             // VERY GOOD
-        } else if ((guess + 100 >= outingCode) && (guess - 100 <= outingCode))
+            mvprintw(20,20,"VERY GOOD");
+        } else if (guess >= outingCode - 100 && guess <= outingCode + 100)
         {
             // OKAY
+            mvprintw(20,20,"OKAY");
         } else
         {
             // NOT GOOD
+            mvprintw(20,20,"NOT GOOD");
         }
 
         *cameraRoll = *cameraRoll - 1;
@@ -634,6 +638,7 @@ int memorableGame(int *cameraRoll, int *outing, int *code, int *closestGuess)
     }
 
     mvprintw(20,20,"%d",outingCode);
+    getch();
 
     return 0;
 }

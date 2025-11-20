@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "display.c"
 #include "minigame.c"
+#include "dialogue.c"
 
 // Checks if you are using linux because ncurses have different path on linux than windows
 #ifdef linux
@@ -79,7 +80,6 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
     int input, dcounting;   // [input] - players input (Arrow key / Enter Key), [dcounting] - time of the day (2 - Morning/Afternoon, 3 - Morning/Afternoon/Evening)
     int options;            // Number of options
     int index = 1;          // index of the options
-    int dialogue = 0;       // Whether if its a dialogue
 
     // Loops for 41 days (day 0 to day 40), ends when its above 40 or the player press the quit key
     while(*daycount <= 40 && quit != 1)
@@ -294,175 +294,169 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                     // CHECK WHAT TIME AND DAY
                     if (*daycount % 4 != 0) // School Day
                     {
-                        if (dialogue != 1) // Check if there is a dialoge
+                        if (*day == 1) // Check whether its Morning or Afternoon
                         {
-                            if (*day == 1) // Check whether its Morning or Afternoon
+                            switch (index)
                             {
-                                switch (index)
+                            case 1:
+                                if (*actionPoint > 0)
                                 {
-                                case 1:
-                                    if (*actionPoint > 0)
-                                    {
-                                        *actionPoint -= 1;
-                                        bondGame(damianBP, 1, mathLVL, peLVL);
-                                    } else
-                                    {
-                                        j--; // RESET since there is no action point
-                                    }
-                                    break;                                
-                                case 2:
-                                    if (*actionPoint > 0)
-                                    {
-                                        *actionPoint -= 1;
-                                        bondGame(beckyBP, 2, mathLVL, peLVL);
-                                    } else
-                                    {
-                                        j--; // RESET since there is no action point
-                                    }
-                                    break;
-                                case 3:
-                                    if (*actionPoint > 0)
-                                    {
-                                        *actionPoint -= 1;
-                                        bondGame(hendersonBP, 3, mathLVL, peLVL);
-                                    } else
-                                    {
-                                        j--; // RESET since there is no action point
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                    *actionPoint -= 1;
+                                    bondGame(damianBP, 1, mathLVL, peLVL);
+                                } else
+                                {
+                                    j--; // RESET since there is no action point
                                 }
-                            } else
+                                break;                                
+                            case 2:
+                                if (*actionPoint > 0)
+                                {
+                                    *actionPoint -= 1;
+                                    bondGame(beckyBP, 2, mathLVL, peLVL);
+                                } else
+                                {
+                                    j--; // RESET since there is no action point
+                                }
+                                break;
+                            case 3:
+                                if (*actionPoint > 0)
+                                {
+                                    *actionPoint -= 1;
+                                    bondGame(hendersonBP, 3, mathLVL, peLVL);
+                                } else
+                                {
+                                    j--; // RESET since there is no action point
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        } else
+                        {
+                            switch (index)
                             {
-                                switch (index)
+                            case 1:
+                                if (*actionPoint > 0)
                                 {
-                                case 1:
-                                    if (*actionPoint > 0)
-                                    {
-                                        *actionPoint -= 1;
-                                        mathGame(mathLVL, mathEXP);
-                                    } else
-                                    {
-                                        j--; // RESET since there is no action point
-                                    }                        
-                                    break;
-                                case 2:
-                                    if (*actionPoint > 0)
-                                    {
-                                        *actionPoint -= 1;
-                                        peGame(peLVL, peEXP);
-                                    } else
-                                    {
-                                        j--; // RESET since there is no action point
-                                    }
-                                    break;
-                                case 3:
-                                    if (*actionPoint > 0)
-                                    {
-                                        *actionPoint -= 1;
-                                        bondGame(bondBP, 4, mathLVL, peLVL);
-                                    } else
-                                    {
-                                        j--; // RESET since there is no action point
-                                    }
-                                    break;
-                                default:
-                                    break;
+                                    *actionPoint -= 1;
+                                    mathGame(mathLVL, mathEXP);
+                                } else
+                                {
+                                    j--; // RESET since there is no action point
+                                }                        
+                                break;
+                            case 2:
+                                if (*actionPoint > 0)
+                                {
+                                    *actionPoint -= 1;
+                                    peGame(peLVL, peEXP);
+                                } else
+                                {
+                                    j--; // RESET since there is no action point
                                 }
+                                break;
+                            case 3:
+                                if (*actionPoint > 0)
+                                {
+                                    *actionPoint -= 1;
+                                    bondGame(bondBP, 4, mathLVL, peLVL);
+                                } else
+                                {
+                                    j--; // RESET since there is no action point
+                                }
+                                break;
+                            default:
+                                break;
                             }
                         }
                     } else
                     {
-                        if (dialogue != 1) // Check if there is a dialogue
+                        if (*day == 1) // Check whether its Morning or Afternoon or Evening (Family Meeting)
                         {
-                            if (*day == 1) // Check whether its Morning or Afternoon or Evening (Family Meeting)
+                            // Do some dialogue
+                        } else if (*day == 2)
+                        {
+                            if (index == 1)
                             {
-                                // Do some dialogue
-                            } else if (*day == 2)
-                            {
-                                if (index == 1)
+                                // Starts the memorable minigame
+                                switch (*outing)
                                 {
-                                    // Starts the memorable minigame
-                                    switch (*outing)
-                                    {
-                                    case 1:
-                                        memorableGame(cameraRoll, outing, code, Cout1);
-                                        break;
-                                    case 2:
-                                        memorableGame(cameraRoll, outing, code, Cout2);
-                                        break;
-                                    case 3:
-                                        memorableGame(cameraRoll, outing, code, Cout3);
-                                        break;
-                                    case 4:
-                                        memorableGame(cameraRoll, outing, code, Cout4);
-                                        break;
-                                    case 5:
-                                        memorableGame(cameraRoll, outing, code, Cout5);
-                                        break;
-                                    case 6:
-                                        memorableGame(cameraRoll, outing, code, Cout6);
-                                        break;
-                                    case 7:
-                                        memorableGame(cameraRoll, outing, code, Cout7);
-                                        break;
-                                    default:
-                                        break;
-                                    }
-                                }
-
-                                *outing = 0;        // memorable is over, choose again
-                            } else
-                            {
-                                // Set the venue of the next Outing to whatever index is
-                                // [4][5][6][7] have requirements before getting selected
-                                switch (index)
-                                {
+                                case 1:
+                                    memorableGame(cameraRoll, outing, code, Cout1);
+                                    break;
+                                case 2:
+                                    memorableGame(cameraRoll, outing, code, Cout2);
+                                    break;
+                                case 3:
+                                    memorableGame(cameraRoll, outing, code, Cout3);
+                                    break;
                                 case 4:
-                                    if (*beckyBP == 5)
-                                    {
-                                        *outing = index;
-                                    } else
-                                    {
-                                        j--;
-                                    }
+                                    memorableGame(cameraRoll, outing, code, Cout4);
                                     break;
                                 case 5:
-                                    if (*hendersonBP == 5)
-                                    {
-                                        *outing = index;
-                                    } else
-                                    {
-                                        j--;
-                                    }
+                                    memorableGame(cameraRoll, outing, code, Cout5);
                                     break;
                                 case 6:
-                                    if (*damianBP == 5)
-                                    {
-                                        *outing = index;
-                                    } else
-                                    {
-                                        j--;
-                                    }
+                                    memorableGame(cameraRoll, outing, code, Cout6);
                                     break;
                                 case 7:
-                                    if (*bondBP == 5)
-                                    {
-                                        *outing = index;
-                                    } else
-                                    {
-                                        j--;
-                                    }
+                                    memorableGame(cameraRoll, outing, code, Cout7);
                                     break;
-                                
                                 default:
-                                    *outing = index;
                                     break;
                                 }
-
-                                *cameraRoll = 5;    // Refill
                             }
+
+                            *outing = 0;        // memorable is over, choose again
+                        } else
+                        {
+                            // Set the venue of the next Outing to whatever index is
+                            // [4][5][6][7] have requirements before getting selected
+                            switch (index)
+                            {
+                            case 4:
+                                if (*beckyBP == 5)
+                                {
+                                    *outing = index;
+                                } else
+                                {
+                                    j--;
+                                }
+                                break;
+                            case 5:
+                                if (*hendersonBP == 5)
+                                {
+                                    *outing = index;
+                                } else
+                                {
+                                    j--;
+                                }
+                                break;
+                            case 6:
+                                if (*damianBP == 5)
+                                {
+                                    *outing = index;
+                                } else
+                                {
+                                    j--;
+                                }
+                                break;
+                            case 7:
+                                if (*bondBP == 5)
+                                {
+                                    *outing = index;
+                                } else
+                                {
+                                    j--;
+                                }
+                                break;
+                            
+                            default:
+                                *outing = index;
+                                break;
+                            }
+
+                            *cameraRoll = 5;    // Refill
                         }
                     }
 
