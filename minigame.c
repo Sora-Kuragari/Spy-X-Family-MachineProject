@@ -50,9 +50,10 @@ void levelup(int* LVL, int* XP)
     @param question - number of questions
     @return additionalAP - number of additional AP given based on correct if and only if player is max level 
 */
-int scoring(int* XP, int correct, int question)
+int scoring(int *LVL, int* XP, int correct, int question, int gametype)
 {
-    int AP = -1;
+    int AP = 0;
+    int expGained = 0;
 
     // Convert the integer to float
     float numerator = correct;
@@ -62,6 +63,7 @@ int scoring(int* XP, int correct, int question)
 
     if (correctPercent == 100)
     {
+        expGained = 3;
         *XP += 3;
         switch(randomValue(1,2))
         {
@@ -70,14 +72,21 @@ int scoring(int* XP, int correct, int question)
                 break;
             case 2:
                 AP = 1; // WINNER! Award 1 AP
+                break;
         }
     } else if (correctPercent >= 80)
     {
         *XP += 2;
+        expGained = 2;
     } else if (correctPercent >= 60)
     {
         *XP += 1;
+        expGained = 1;
     }
+
+    levelup(LVL, XP);
+
+    showscore(LVL, XP, expGained, correct, question, gametype);
 
     return AP;
 }
@@ -92,6 +101,15 @@ int scoring(int* XP, int correct, int question)
 */
 int mathGame(int* mathLVL, int* mathEXP)
 {
+    int height, width;
+    getmaxyx(stdscr, height, width);
+
+    // Clean the options
+    for (int i = 0; i < 7; i++)
+    {
+        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+    }
+
     srand(time(0)); // Sets the seed
     echo();         // Key pressed is visible when typing
     curs_set(1);    // Shows the cursor
@@ -108,6 +126,8 @@ int mathGame(int* mathLVL, int* mathEXP)
     } else {
         question = 10;
     }
+
+    mvprintw(height-20, (width-13)/2, "LOID FORGER:");
 
     // Loops until all questions are answered
     for (int i = 0; i < question; i++)
@@ -159,24 +179,24 @@ int mathGame(int* mathLVL, int* mathEXP)
         {
         case 1:
             total = num1 + num2;
-            mvprintw(20, 50, "%d + %d = ???", num1, num2);
+            mvprintw(height-18, (width-19)/2, "What is %d + %d?", num1, num2);
             break;
 
         case 2:
             total = num1 - num2;
-            mvprintw(20, 50, "%d - %d = ???", num1, num2);
+            mvprintw(height-18, (width-19)/2, "What is %d - %d?", num1, num2);
             break;
 
         case 3:
             total = num1 * num2;
-            mvprintw(20, 50, "%d * %d = ???", num1, num2);
+            mvprintw(height-18, (width-19)/2, "What is %d * %d?", num1, num2);
             break;
         
         default:
             break;
-        }        
+        }
 
-        printw("%d", total);
+        mvprintw(height-13, (width-15)/2, "Answer: ");
 
         // scanf equivalent in curses
         scanw("%d", &input);
@@ -186,18 +206,20 @@ int mathGame(int* mathLVL, int* mathEXP)
             correct += 1;
         }
 
-        mvprintw(20,50,"%50c",' ');
+        mvprintw(height-18, (width-20)/2,"%-50c",' ');
+        mvprintw(height-13, (width-20)/2,"%-50c",' ');
 
     }
 
-    mvprintw(20,50,"COrrect: %d", correct);
+    // Clean
+    for (int i = 0; i <= 20; i++)
+    {
+        mvprintw(height-(20+i), (width-100)/2,"%-100c",' ');
+    }
 
-    AP = scoring(mathEXP, correct, question);
-    levelup(mathLVL, mathEXP);
+    AP = scoring(mathLVL, mathEXP, correct, question, 1);
+    
     getch();
-
-    noecho();           // Key pressed will not show
-    curs_set(0);        // Hides the cursor
     return AP;
 }
 
@@ -210,7 +232,9 @@ int mathGame(int* mathLVL, int* mathEXP)
 */
 int peGame(int* peLVL, int* peEXP)
 {
-    //int input;
+    int height, width;
+    getmaxyx(stdscr, height, width);
+
     int input;
     int prompt;
     int correct = 0;
@@ -237,56 +261,57 @@ int peGame(int* peLVL, int* peEXP)
             break;
         }
 
+        mvprintw(height-22,(width-12)/2,"YOR FORGER:");
         // Display the prompts
         switch (prompt)
         {
         case 1:
-            mvprintw(20,50,"Up!");
+            mvprintw(height-20, (width-4)/2,"Up!");
             break;
         case 2:
-            mvprintw(20,50,"Down!");
+            mvprintw(height-20,(width-6)/2,"Down!");
             break;
         case 3:
-            mvprintw(20,50,"Left!");
+            mvprintw(height-20,(width-6)/2,"Left!");
             break;
         case 4:
-            mvprintw(20,50,"Right!");
+            mvprintw(height-20,(width-7)/2,"Right!");
             break;
         case 5:
-            mvprintw(20,50,"North!");
+            mvprintw(height-20,(width-7)/2,"North!");
             break;
         case 6:
-            mvprintw(20,50,"South!");
+            mvprintw(height-20,(width-7)/2,"South!");
             break;
         case 7:
-            mvprintw(20,50,"East!");
+            mvprintw(height-20,(width-6)/2,"East!");
             break;
         case 8:
-            mvprintw(20,50,"West!");
+            mvprintw(height-20,(width-6)/2,"West!");
             break;
         case 9:
-            mvprintw(20,50,"UP AHEAD!");
+            mvprintw(height-20,(width-10)/2,"UP AHEAD!");
             break;
         case 10:
-            mvprintw(20,50,"BEHIND YOU!");
+            mvprintw(height-20,(width-12)/2,"BEHIND YOU!");
             break;
         case 11:
-            mvprintw(20,50,"TO THE LEFT!");
+            mvprintw(height-20,(width-13)/2,"TO THE LEFT!");
             break;
         case 12:
-            mvprintw(20,50,"TO THE RIGHT!");
+            mvprintw(height-20,(width-14)/2,"TO THE RIGHT!");
             break;
         case 13:
-            mvprintw(20,50,"Northwest!");
+            mvprintw(height-20,(width-11)/2,"Northwest!");
             break;
         case 14:
-            mvprintw(20,50,"Northeast!");
+            mvprintw(height-20,(width-11)/2,"Northeast!");
             break;
         case 15:
-            mvprintw(20,50,"Southwest!");
+            mvprintw(height-20,(width-11)/2,"Southwest!");
             break;
         case 16:
-            mvprintw(20,50,"Southeast!");
+            mvprintw(height-20,(width-11)/2,"Southeast!");
             break;
         default:
             break;
@@ -425,10 +450,12 @@ int peGame(int* peLVL, int* peEXP)
                 break;
         }
 
+        mvprintw(height-22,(width-50)/2,"%-50c", ' ');
+        mvprintw(height-20,(width-50)/2,"%-50c", ' ');
     }
 
-    additionalAP = scoring(peEXP, correct, 10);
-    levelup(peLVL, peEXP);
+    additionalAP = scoring(peLVL, peEXP, correct, 10, 2);
+    getch();
 
     return additionalAP;
 }
@@ -446,6 +473,7 @@ int peGame(int* peLVL, int* peEXP)
 int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
 {
     int additionalAP = 0;
+    int dummyEXP, gained = 0;
 
     srand(time(0));
 
@@ -458,6 +486,7 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                showscore(bondLVL, &dummyEXP, 0, 1, 2, 4);
             }
         } else
         {
@@ -469,18 +498,21 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
                 if (randomValue(0,100) <= 25)
                 {
                     *bondLVL += 1;
+                    gained = 1;
                 }
                 break;
             case 3:
                 if (randomValue(0,100) <= 50)
                 {
                     *bondLVL += 1;
+                    gained = 1;
                 }
                 break;
             case 4:
                 if (randomValue(0,100) <= 75)
                 {
                     *bondLVL += 1;
+                    gained = 1;
                 }
                 break;            
             default:
@@ -491,7 +523,12 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                showscore(bondLVL, &dummyEXP, gained, 1, 3, 4);
+            } else
+            {
+            showscore(bondLVL, &dummyEXP, gained, 1, 0, 4);
             }
+
         }
         break;
 
@@ -502,18 +539,24 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                showscore(bondLVL, &dummyEXP, 0, 2, 2, 4);
             }
         } else
         {        
             if (randomValue(0,100) <= 75)
             {
                 *bondLVL += 1;
+                gained = 1;
             }
             
             // Awards 3 AP when bondLVL reaches 5
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                showscore(bondLVL, &dummyEXP, gained, 2, 3, 4);
+            } else
+            {
+            showscore(bondLVL, &dummyEXP, gained, 2, 0, 4);
             }
         }
         break;
@@ -525,6 +568,7 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                showscore(bondLVL, &dummyEXP, 0, 3, 2, 4);
             }
         } else
         {
@@ -536,16 +580,19 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
                 if (randomValue(0,100) <= 50)
                 {
                     *bondLVL += 1;
+                    gained = 1;
                 }
                 break;
             case 3:
                 if (randomValue(0,100) <= 75)
                 {
                     *bondLVL += 1;
+                    gained = 1;
                 }
                 break;
             case 4:
                 *bondLVL += 1;
+                gained = 1;
                 break;            
             default:
                 break;
@@ -555,6 +602,10 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                showscore(bondLVL, &dummyEXP, gained, 3, 3, 4);
+            } else
+            {
+            showscore(bondLVL, &dummyEXP, gained, 3, 0, 4);
             }
         }
         break;
@@ -566,15 +617,21 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                showscore(bondLVL, &dummyEXP, 0, 4, 2, 4);
             }
         } else
         {        
             *bondLVL += 1;
+            gained = 1;
             
             // Awards 3 AP when bondLVL reaches 5
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                showscore(bondLVL, &dummyEXP, gained, 4, 3, 4);
+            } else
+            {
+                showscore(bondLVL, &dummyEXP, gained, 4, 0, 4);
             }
         }
         break;
@@ -582,6 +639,8 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
     default:
         break;
     }
+
+    getch();
 
     return additionalAP;
 }
@@ -598,9 +657,16 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
 void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, int *closestGuess)
 {
     int outingCode = 0;
-    int guess;
+    int closeGuess = 0;
+    int guess, score;
     int perfect = 0;
     int close = 0;
+    int index = 1;
+    int dummyLVL, dummyEXP;
+    int height, width;
+
+    getmaxyx(stdscr, height, width);
+    echo();
 
     // If code doesn't exist then generate one
     mvprintw(20,20,"%d", *code);
@@ -608,7 +674,6 @@ void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, i
     {
         *code = time(0);
     }
-    mvprintw(20,20,"%d", *code);
 
     srand(*code);       // Sets the seed
 
@@ -620,50 +685,152 @@ void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, i
 
     while (!close && !perfect)
     {
-        while (!perfect && *cameraRoll > 0)
+        while (!close && !perfect && *cameraRoll > 0)
         {
+            closeGuess = *closestGuess % 10000;
+
+            switch (*closestGuess / 10000)
+            {
+            case 1:
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: NOT GOOD");
+                break;
+            case 2:
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: OKAY");
+                break;
+            case 3:
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: VERY GOOD");
+                break;
+            case 4:
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: PERFECT");
+                break;
+            default:
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade:          ");
+                break;
+            }
+            mvprintw(height-19, (width-20)/2,"Closest Angle: %d", closeGuess);
+            mvprintw(height-17, (width-25)/2, "Enter Camera Angle: ");
+
             scanw("%d", &guess);
+
+            mvprintw(height-19, (width-20)/2,"Closest Angle: %d", closeGuess);
+
+            if (abs(guess - outingCode) < abs(closeGuess - outingCode))
+            {
+                closeGuess = guess;  // Change is guess is closer than the previous closestGuess
+            }
             
             if (guess == outingCode)
             {
                 // PERFECT
-                mvprintw(20,20,"PERFECT");
-                *closestGuess %= 10000;
-                *closestGuess += 40000;
+                mvprintw(height-20,(width-3)/2,"Camera Angle Grade: PERFECT");
+                *closestGuess = 40000;
+                score = 4;
                 perfect = 1;
             } else if (guess >= outingCode - 10 && guess <= outingCode + 10)
             {
                 // VERY GOOD
-                mvprintw(20,20,"VERY GOOD");
-                *closestGuess %= 10000;
-                *closestGuess += 30000;
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: VERY GOOD");
+                *closestGuess = 30000;
+                score = 3;
             } else if (guess >= outingCode - 100 && guess <= outingCode + 100)
             {
                 // OKAY
-                mvprintw(20,20,"OKAY");
-                *closestGuess %= 10000;
-                *closestGuess += 20000;
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: OKAY");
+                *closestGuess = 20000;
+                score = 2;
             } else
             {
                 // NOT GOOD
-                mvprintw(20,20,"NOT GOOD");
-                *closestGuess %= 10000;
-                *closestGuess += 10000;
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: NOT GOOD");
+                *closestGuess = 10000;
+                score = 1;
             }
 
             *cameraRoll = *cameraRoll - 1;
+            *closestGuess += closeGuess;
+            mvprintw(8,2,"ACTIVITY POINTS: %2d", *actionPoints);
             mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);   // Refreshes the display whenever a camera roll is used
+
+            mvprintw(height-17, (width-50)/2,"%-50c", ' ');
             refresh();
         }
 
-        getch();
-        close = 1;
+        // Cleans previous prints
+        mvprintw(height-20, (width-50)/2,"%-50c", ' ');
+        mvprintw(height-19, (width-50)/2,"%-50c", ' ');
+        mvprintw(height-17, (width-50)/2,"%-50c", ' ');
+
+        showscore(&dummyLVL, &dummyEXP, *closestGuess % 10000, *outing, score, 3);
+
+        if (*actionPoints > 0 && !perfect)
+        {
+            init_pair(2, COLOR_GREEN, COLOR_BLACK);
+            mvprintw(height-13, (width-18)/2,"You have more AP:");
+            mvprintw(height-12, (width-38)/2,"  Continue Playing Memorable Minigame");
+            mvprintw(height-11, (width-38)/2,"  Go Home");
+
+            attron(COLOR_PAIR(2));
+            switch (index)
+            {
+            case 1:
+                mvprintw(height-12, (width-38)/2,"> Continue Playing Memorable Minigame");
+                break;
+            case 2:
+                mvprintw(height-11, (width-38)/2,"  Go Home");
+                break;
+            
+            default:
+                break;
+            }
+            attroff(COLOR_PAIR(2));
+
+            switch (getch())
+            {
+                case KEY_DOWN:
+                    index++;
+                    if (index > 2)
+                    {
+                        index = 1;
+                    }
+                    break;
+                case KEY_UP:
+                    index--;
+                    if (index < 1)
+                    {
+                        index = 2;
+                    }
+                    break;
+                case '\n':
+                    if (index == 1)
+                    {
+                        *actionPoints -= 1;
+                        *cameraRoll = 5;
+                        mvprintw(8,2,"ACTIVITY POINTS: %2d", *actionPoints);
+                        mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);   // Refreshes the display whenever a camera roll is used
+
+                        echo();
+                    } else
+                    {
+                        close = 1;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else
+        {
+            mvprintw(height-24, (width-27)/2, "Press [Enter] to continue!");
+            getch();
+            close = 1;
+        }
+
+        for (int i = 0; i < 30; i++)
+        {
+            // Cleans previous prints
+            mvprintw(height-(31-i), (width-50)/2,"%-50c", ' ');
+        }
 
     }
 
-    
-
-    mvprintw(20,20,"%d",outingCode);
-    
-    
+    noecho();
 }

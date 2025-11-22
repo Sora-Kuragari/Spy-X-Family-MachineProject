@@ -349,3 +349,169 @@ void dialoguefunc()
     }
     
 }
+
+/*
+    This function show the scoring/conclusion of the minigames
+    Preconditions: A minigame must call this function. *LVL, *EXP are pointers to positive integer. All non-pointer param are positive interger
+    @param *LVL - A pointer to the player's (Math, PE, Bond) level
+    @param *EXP - A pointer to the player's (Math, PE) EXP or just placeholder
+    @param expGained - EXP gain based on correct/question in Math and PE, or BP increase in Bonding or closest guess in outing
+    @param correct - number of correct input in Math and PE, or integer-equivalent for bonding [1] - Damian Desmonds, [2] - Becky Blackbell, [3] - Mr. Henderson, [4] - Bond Forger, or outing venue
+    @param question - number of questions in Math and PE, or number of additional AP gained in bonding, or score of the guess in outing
+    @param gametype - what minigame is being used [1] - Math, [2] - PE, [3] - Outing, [4] - Bonding
+*/
+void showscore(int *LVL, int *EXP, int expGained, int correct, int question, int gametype)
+{
+    int height, width;
+    getmaxyx(stdscr, height, width);
+
+    switch (gametype)
+    {
+        case 1: // Math
+            mvprintw(height-31, (width-20)/2, "[ GAME CONCLUSION ]");
+            mvprintw(height-29, (width-21)/2, "Total Score: %d / %d", correct, question);
+            mvprintw(height-28, (width-15)/2, "EXP Gained: %d", expGained);
+
+            if (*LVL == 4)
+            {
+                mvprintw(height-26, (width-24)/2, "Current Math level: MAX");
+                mvprintw(height-25, (width-22)/2, "Current Math EXP: MAX");
+
+            } else 
+            {
+                mvprintw(height-26, (width-23)/2, "Current Math level: %d", *LVL);
+                mvprintw(height-25, (width-26)/2, "Current Math EXP: %d / %d", *EXP, *LVL*5);
+            }
+
+            mvprintw(height-24, (width-27)/2, "Press [Enter] to continue!");
+            break;
+        case 2: // PE
+            mvprintw(height-31, (width-20)/2, "[ GAME CONCLUSION ]");
+            mvprintw(height-29, (width-21)/2, "Total Score: %d / %d", correct, question);
+            mvprintw(height-28, (width-15)/2, "EXP Gained: %d", expGained);
+
+            if (*LVL == 4)
+            {
+                mvprintw(height-26, (width-24)/2, "Current PE level: MAX");
+                mvprintw(height-25, (width-22)/2, "Current PE EXP: MAX");
+
+            } else 
+            {
+                mvprintw(height-26, (width-23)/2, "Current PE level: %d", *LVL);
+                mvprintw(height-25, (width-26)/2, "Current PE EXP: %d / %d", *EXP, *LVL*5);
+            }
+
+            mvprintw(height-24, (width-27)/2, "Press [Enter] to continue!");
+            break;
+        case 3: // Outing
+            mvprintw(height-31, (width-22)/2, "[ OUTING CONCLUSION ]");
+
+            switch (correct)
+            {
+            case 1:
+                mvprintw(height-29, (width-19)/2, "Outing Venue: Park");
+                break;
+            case 2:
+                mvprintw(height-29, (width-24)/2, "Outing Venue: City Mall");
+                break;
+            case 3:
+                mvprintw(height-29, (width-28)/2, "Outing Venue: Ostania Beach");
+                break;
+            case 4:
+                mvprintw(height-29, (width-36)/2, "Outing Venue: West Berlint Aquarium");
+                break;
+            case 5:
+                mvprintw(height-29, (width-33)/2, "Outing Venue: Ostania Art Museum");
+                break;
+            case 6:
+                mvprintw(height-29, (width-36)/2, "Outing Venue: Berlint Mouseney Land");
+                break;
+            case 7:
+                mvprintw(height-29, (width-34)/2, "Outing Venue: Park Avenue Dogland");
+                break;
+            
+            default:
+                break;
+            }
+
+            switch (question)
+            {
+            case 1:
+                mvprintw(height-28, (width-16)/2, "Score: Not Good");
+                mvprintw(height-26, (width-20)/2, "Closest Guess: %d", expGained);
+                break;
+            case 2:
+                mvprintw(height-28, (width-12)/2, "Score: Okay");
+                mvprintw(height-26, (width-20)/2, "Closest Guess: %d", expGained);
+                break;
+            case 3:
+                mvprintw(height-28, (width-17)/2, "Score: Very Good");
+                mvprintw(height-26, (width-20)/2, "Closest Guess: %d", expGained);
+                break;
+            case 4:
+                mvprintw(height-28, (width-15)/2, "Score: Perfect");
+                mvprintw(height-26, (width-14)/2, "Correct: %d", expGained);
+                break;
+            default:
+                break;
+            }
+            
+            break;
+        case 4: // Bonding
+            mvprintw(height-31, (width-23)/2, "[ BONDING CONCLUSION ]");
+            mvprintw(height-29, (width-16)/2, "Bond Gained: %d", expGained);
+            mvprintw(height-28, (width-18)/2, "Additional AP: %d", question);
+
+            switch (correct)
+            {
+            case 1:
+                if (*LVL == 5)
+                {
+                    mvprintw(height-26, (width-31)/2, "Current Damian Desmond BP: MAX");
+
+                } else 
+                {
+                    mvprintw(height-26, (width-30)/2, "Current Damian Desmond BP: %d", *LVL);
+                }
+                break;
+            case 2:
+                if (*LVL == 5)
+                {
+                    mvprintw(height-26, (width-32)/2, "Current Becky Blackbell BP: MAX");
+
+                } else 
+                {
+                    mvprintw(height-26, (width-31)/2, "Current Becky Blackbell BP: %d", *LVL);
+                }
+                break;
+            case 3:
+                if (*LVL == 5)
+                {
+                    mvprintw(height-26, (width-30)/2, "Current Mr. Henderson BP: MAX");
+
+                } else 
+                {
+                    mvprintw(height-26, (width-29)/2, "Current Mr. Henderson BP: %d", *LVL);
+                }
+                break;
+            case 4:
+                if (*LVL == 5)
+                {
+                    mvprintw(height-26, (width-28)/2, "Current Bond Forger BP: MAX");
+
+                } else 
+                {
+                    mvprintw(height-26, (width-27)/2, "Current Bond Forger BP: %d", *LVL);
+                }
+                break;
+            
+            default:
+                break;
+            }
+
+            mvprintw(height-24, (width-27)/2, "Press [Enter] to continue!");
+            break;
+    }
+    noecho();
+    curs_set(0);
+}

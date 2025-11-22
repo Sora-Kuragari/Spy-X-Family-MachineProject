@@ -543,6 +543,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     bondGame(damianBP, 1, mathLVL, peLVL);
                                 } else
                                 {
@@ -553,6 +558,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     bondGame(beckyBP, 2, mathLVL, peLVL);
                                 } else
                                 {
@@ -563,6 +573,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     bondGame(hendersonBP, 3, mathLVL, peLVL);
                                 } else
                                 {
@@ -580,6 +595,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     mathGame(mathLVL, mathEXP);
                                 } else
                                 {
@@ -590,6 +610,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     peGame(peLVL, peEXP);
                                 } else
                                 {
@@ -600,6 +625,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     bondGame(bondBP, 4, mathLVL, peLVL);
                                 } else
                                 {
@@ -622,6 +652,11 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 if (*actionPoint > 0)
                                 {
                                     *actionPoint -= 1;
+                                    // Clean the options
+                                    for (int i = 0; i < 8; i++)
+                                    {
+                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                    }
                                     // Starts the memorable minigame
                                     switch (*outing)
                                     {
@@ -739,6 +774,13 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
 
                     // Reset the index back to the top
                     index = 1;
+
+                    // Clean the options
+                    for (int i = 0; i < 8; i++)
+                    {
+                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                    }
+                    
                     j++; // Only proceed to next when entered
                     break;
 
