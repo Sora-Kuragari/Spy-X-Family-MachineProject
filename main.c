@@ -80,6 +80,9 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
     int input, dcounting;   // [input] - players input (Arrow key / Enter Key), [dcounting] - time of the day (2 - Morning/Afternoon, 3 - Morning/Afternoon/Evening)
     int options;            // Number of options
     int index = 1;          // index of the options
+    int height, width;      // the max height and max width of the screen (terminal)
+
+    getmaxyx(stdscr, height, width);
 
     // Loops for 41 days (day 0 to day 40), ends when its above 40 or the player press the quit key
     while(*daycount <= 40 && quit != 1)
@@ -98,7 +101,7 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
         {
             *day = j; // Syncronizes day with j (Important specially when game is continued from a saved file)
 
-            mainUI(day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP);
+            mainUI(height, width, day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP);
             dialoguefunc();
 
             /* Display the options */
@@ -107,26 +110,26 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                 options = 4;
 
                 // Display choices
-                mvprintw(20,50,"%-50s","  Bond with Damian");
-                mvprintw(21,50,"%-50s","  Bond with Becky");
-                mvprintw(22,50,"%-50s","  Bond with Mr. Henderson");
-                mvprintw(23,50,"%-50s","  Proceed Home");
+                mvprintw(height-12,(width-50)/2,"%-50s","  Bond with Damian");
+                mvprintw(height-11,(width-50)/2,"%-50s","  Bond with Becky");
+                mvprintw(height-10,(width-50)/2,"%-50s","  Bond with Mr. Henderson");
+                mvprintw(height-9,(width-50)/2,"%-50s","  Proceed Home");
 
                 // Adds color when its selected based on the index
                 attron(COLOR_PAIR(2));
                 switch (index)
                 {
                 case 1:
-                    mvprintw(20,50,"%-50s","> Bond with Damian");
+                    mvprintw(height-12,(width-50)/2,"%-50s","> Bond with Damian");
                     break;
                 case 2:
-                    mvprintw(21,50,"%-50s","> Bond with Becky");
+                    mvprintw(height-11,(width-50)/2,"%-50s","> Bond with Becky");
                     break;
                 case 3:
-                    mvprintw(22,50,"%-50s","> Bond with Mr. Henderson");
+                    mvprintw(height-10,(width-50)/2,"%-50s","> Bond with Mr. Henderson");
                     break;
                 case 4:
-                    mvprintw(23,50,"%-50s","> Proceed Home");
+                    mvprintw(height-9,(width-50)/2,"%-50s","> Proceed Home");
                     break;
                 default:
                     break;
@@ -138,26 +141,26 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                 options = 4;
 
                 // Display choices
-                mvprintw(20,50,"%-50s","  Study Math with Loid");
-                mvprintw(21,50,"%-50s","  Train Physical Education with Yor");
-                mvprintw(22,50,"%-50s","  Play with Bond");
-                mvprintw(23,50,"%-50s","  Slack Off");
+                mvprintw(height-12,(width-50)/2,"%-50s","  Study Math with Loid");
+                mvprintw(height-11,(width-50)/2,"%-50s","  Train Physical Education with Yor");
+                mvprintw(height-10,(width-50)/2,"%-50s","  Play with Bond");
+                mvprintw(height-9,(width-50)/2,"%-50s","  Slack Off");
 
                 // Adds color when its selected based on the index
                 attron(COLOR_PAIR(2));
                 switch (index)
                 {
                 case 1:
-                    mvprintw(20,50,"%-50s","> Study Math with Loid");
+                    mvprintw(height-12,(width-50)/2,"%-50s","> Study Math with Loid");
                     break;
                 case 2:
-                    mvprintw(21,50,"%-50s","> Train Physical Education with Yor");
+                    mvprintw(height-11,(width-50)/2,"%-50s","> Train Physical Education with Yor");
                     break;
                 case 3:
-                    mvprintw(22,50,"%-50s","> Play with Bond");
+                    mvprintw(height-10,(width-50)/2,"%-50s","> Play with Bond");
                     break;
                 case 4:
-                    mvprintw(23,50,"%-50s","> Slack Off");
+                    mvprintw(height-9,(width-50)/2,"%-50s","> Slack Off");
                     break;
                 default:
                     break;
@@ -169,25 +172,25 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
 
                 // Display the only choice 
                 attron(COLOR_PAIR(2));
-                mvprintw(20,50,"%-50s","> Go to Ooting!");
+                mvprintw(height-12,(width-50)/2,"%-50s","> Go to Ooting!");
                 attroff(COLOR_PAIR(2));
             } else if ((*daycount % 4 == 0) && *day == 2) // If its outing day and afternoon
             {
                 options = 2;
 
                 // Display choices
-                mvprintw(20,50,"%-50s","  Take a Memorable Photo for the Project");
-                mvprintw(21,50,"%-50s","  Go Home");
+                mvprintw(height-12,(width-50)/2,"%-50s","  Take a Memorable Photo for the Project");
+                mvprintw(height-11,(width-50)/2,"%-50s","  Go Home");
 
                 // Adds color when its selected based on the index
                 attron(COLOR_PAIR(2));
                 switch (index)
                 {
                 case 1:
-                    mvprintw(20,50,"%-50s","> Take a Memorable Photo for the Project");
+                    mvprintw(height-12,(width-50)/2,"%-50s","> Take a Memorable Photo for the Project");
                     break;
                 case 2:
-                    mvprintw(21,50,"%-50s","> Go Home");
+                    mvprintw(height-11,(width-50)/2,"%-50s","> Go Home");
                     break;
                 default:
                     break;
@@ -198,30 +201,149 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                 options = 7;
                 
                 // Display choices
-                mvprintw(20,50,"%-50s","  Park");
-                mvprintw(21,50,"%-50s","  City Mall");
-                mvprintw(22,50,"%-50s","  Ostania Beach");
-                mvprintw(23,50,"%-50s","  West Berlint Aquarium");
-                mvprintw(24,50,"%-50s","  Ostania Art Museum");
-                mvprintw(25,50,"%-50s","  Berlint Mouseney Land");
-                mvprintw(26,50,"%-50s","  Park Avenue Dogland");
+                mvprintw(height-12,(width-50)/2,"%-50s","  Park");
+                mvprintw(height-11,(width-50)/2,"%-50s","  City Mall");
+                mvprintw(height-10,(width-50)/2,"%-50s","  Ostania Beach");
+                mvprintw(height-9,(width-50)/2,"%-50s","  West Berlint Aquarium");
+                mvprintw(height-8,(width-50)/2,"%-50s","  Ostania Art Museum");
+                mvprintw(height-7,(width-50)/2,"%-50s","  Berlint Mouseney Land");
+                mvprintw(height-6,(width-50)/2,"%-50s","  Park Avenue Dogland");
 
-                // Checks whether the necessary requirements are not achieved then append "LOCKED" 
-                if (*beckyBP != 5)
+                // Check if player already tried the venue then show the scoring and Checks whether the necessary requirements are not achieved then append "LOCKED"
+                switch (*Cout1 / 10000)
                 {
-                    mvprintw(23,75,"- LOCKED");
+                case 1:
+                    mvprintw(height-12,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-12,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-12,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-12,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    break;
                 }
-                if (*hendersonBP != 5)
+                switch (*Cout2 / 10000)
                 {
-                    mvprintw(24,75,"- LOCKED");
+                case 1:
+                    mvprintw(height-11,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-11,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-11,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-11,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    break;
                 }
-                if (*damianBP != 5)
+                switch (*Cout3 / 10000)
                 {
-                    mvprintw(25,75,"- LOCKED");
+                case 1:
+                    mvprintw(height-10,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-10,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-10,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-10,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    break;
                 }
-                if (*bondBP != 5)
+                switch (*Cout4 / 10000)
                 {
-                    mvprintw(26,75,"- LOCKED");
+                case 1:
+                    mvprintw(height-9,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-9,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-9,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-9,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    if (*beckyBP != 5)
+                    {
+                        mvprintw(height-9,((width-50)/2)+25,"- LOCKED");
+                    }
+                    break;
+                }
+                switch (*Cout5 / 10000)
+                {
+                case 1:
+                    mvprintw(height-8,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-8,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-8,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-8,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    if (*hendersonBP != 5)
+                    {
+                        mvprintw(height-8,((width-50)/2)+25,"- LOCKED");
+                    }
+                    break;
+                }
+                switch (*Cout6 / 10000)
+                {
+                case 1:
+                    mvprintw(height-7,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-7,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-7,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-7,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    if (*damianBP != 5)
+                    {
+                        mvprintw(height-7,((width-50)/2)+25,"- LOCKED");
+                    }
+                    break;
+                }
+                switch (*Cout7 / 10000)
+                {
+                case 1:
+                    mvprintw(height-6,((width-50)/2)+25,"- NOT GOOD");
+                    break;
+                case 2:
+                    mvprintw(height-6,((width-50)/2)+25,"- OKAY");
+                    break;
+                case 3:
+                    mvprintw(height-6,((width-50)/2)+25,"- VERY GOOD");
+                    break;
+                case 4:
+                    mvprintw(height-6,((width-50)/2)+25,"- PERFECT");
+                    break;
+                default:
+                    if (*bondBP != 5)
+                    {
+                        mvprintw(height-6,((width-50)/2)+25,"- LOCKED");
+                    }
+                    break;
                 }
 
                 // Adds color when its selected based on the index
@@ -229,40 +351,159 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                 switch (index)
                 {
                 case 1:
-                    mvprintw(20,50,"%-50s","> Park");
+                    mvprintw(height-12,(width-50)/2,"%-50s","> Park");
+                    switch (*Cout1 / 10000)
+                    {
+                    case 1:
+                        mvprintw(height-12,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-12,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-12,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-12,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        break;
+                    }
                     break;
                 case 2:
-                    mvprintw(21,50,"%-50s","> City Mall");
+                    mvprintw(height-11,(width-50)/2,"%-50s","> City Mall");
+                    switch (*Cout2 / 10000)
+                    {
+                    case 1:
+                        mvprintw(height-11,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-11,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-11,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-11,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        break;
+                    }
                     break;
                 case 3:
-                    mvprintw(22,50,"%-50s","> Ostania Beach");
+                    mvprintw(height-10,(width-50)/2,"%-50s","> Ostania Beach");
+                    switch (*Cout3 / 10000)
+                    {
+                    case 1:
+                        mvprintw(height-10,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-10,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-10,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-10,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        break;
+                    }
                     break;
                 case 4:
-                    mvprintw(23,50,"%-50s","> West Berlint Aquarium");
-                    if (*beckyBP != 5)
+                    mvprintw(height-9,(width-50)/2,"%-50s","> West Berlint Aquarium");
+                    switch (*Cout4 / 10000)
                     {
-                        mvprintw(23,75,"- LOCKED");
+                    case 1:
+                        mvprintw(height-9,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-9,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-9,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-9,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        if (*beckyBP != 5)
+                        {
+                            mvprintw(height-9,((width-50)/2)+25,"- LOCKED");
+                        }
+                        break;
                     }
                     break;
                 case 5:
-                    mvprintw(24,50,"%-50s","> Ostania Art Museum");
-                    if (*hendersonBP != 5)
+                    mvprintw(height-8,(width-50)/2,"%-50s","> Ostania Art Museum");
+                    switch (*Cout5 / 10000)
                     {
-                        mvprintw(24,75,"- LOCKED");
+                    case 1:
+                        mvprintw(height-8,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-8,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-8,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-8,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        if (*hendersonBP != 5)
+                        {
+                            mvprintw(height-8,((width-50)/2)+25,"- LOCKED");
+                        }
+                        break;
                     }
                     break;
                 case 6:
-                    mvprintw(25,50,"%-50s","> Berlint Mouseney Land");
-                    if (*damianBP != 5)
+                    mvprintw(height-7,(width-50)/2,"%-50s","> Berlint Mouseney Land");
+                    switch (*Cout6 / 10000)
                     {
-                        mvprintw(25,75,"- LOCKED");
+                    case 1:
+                        mvprintw(height-7,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-7,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-7,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-7,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        if (*damianBP != 5)
+                        {
+                            mvprintw(height-7,((width-50)/2)+25,"- LOCKED");
+                        }
+                        break;
                     }
                     break;
                 case 7:
-                    mvprintw(26,50,"%-50s","> Park Avenue Dogland");
-                    if (*bondBP != 5)
+                    mvprintw(height-6,(width-50)/2,"%-50s","> Park Avenue Dogland");
+                    switch (*Cout7 / 10000)
                     {
-                        mvprintw(26,75,"- LOCKED");
+                    case 1:
+                        mvprintw(height-6,((width-50)/2)+25,"- NOT GOOD");
+                        break;
+                    case 2:
+                        mvprintw(height-6,((width-50)/2)+25,"- OKAY");
+                        break;
+                    case 3:
+                        mvprintw(height-6,((width-50)/2)+25,"- VERY GOOD");
+                        break;
+                    case 4:
+                        mvprintw(height-6,((width-50)/2)+25,"- PERFECT");
+                        break;
+                    default:
+                        if (*bondBP != 5)
+                        {
+                            mvprintw(height-6,((width-50)/2)+25,"- LOCKED");
+                        }
+                        break;
                     }
                     break;
                 default:
@@ -378,73 +619,109 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                         {
                             if (index == 1)
                             {
-                                // Starts the memorable minigame
-                                switch (*outing)
+                                if (*actionPoint > 0)
                                 {
-                                case 1:
-                                    memorableGame(cameraRoll, outing, code, Cout1);
-                                    break;
-                                case 2:
-                                    memorableGame(cameraRoll, outing, code, Cout2);
-                                    break;
-                                case 3:
-                                    memorableGame(cameraRoll, outing, code, Cout3);
-                                    break;
-                                case 4:
-                                    memorableGame(cameraRoll, outing, code, Cout4);
-                                    break;
-                                case 5:
-                                    memorableGame(cameraRoll, outing, code, Cout5);
-                                    break;
-                                case 6:
-                                    memorableGame(cameraRoll, outing, code, Cout6);
-                                    break;
-                                case 7:
-                                    memorableGame(cameraRoll, outing, code, Cout7);
-                                    break;
-                                default:
-                                    break;
+                                    *actionPoint -= 1;
+                                    // Starts the memorable minigame
+                                    switch (*outing)
+                                    {
+                                    case 1:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout1);
+                                        break;
+                                    case 2:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout2);
+                                        break;
+                                    case 3:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout3);
+                                        break;
+                                    case 4:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout4);
+                                        break;
+                                    case 5:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout5);
+                                        break;
+                                    case 6:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout6);
+                                        break;
+                                    case 7:
+                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout7);
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                } else 
+                                {
+                                    j--;
                                 }
+                                
                             }
 
                             *outing = 0;        // memorable is over, choose again
                         } else
                         {
                             // Set the venue of the next Outing to whatever index is
+                            // If outing venue is already perfect then it cannot be picked again
                             // [4][5][6][7] have requirements before getting selected
                             switch (index)
                             {
-                            case 4:
-                                if (*beckyBP == 5)
+                            case 1:
+                                if (*Cout1 / 10000 == 4)
+                                {
+                                    j--;
+                                } else
                                 {
                                     *outing = index;
+                                }
+                                break;
+                            case 2:
+                                if (*Cout2 / 10000 == 4)
+                                {
+                                    j--;
+                                } else
+                                {
+                                    *outing = index;
+                                }
+                                break;
+                            case 3:
+                                if (*Cout3 / 10000 == 4)
+                                {
+                                    j--;
+                                } else
+                                {
+                                    *outing = index;
+                                }
+                                break;
+                            case 4:
+                                if (*Cout4 / 10000 != 4 && *beckyBP == 5)
+                                {
+                                    *outing = index;                                    
                                 } else
                                 {
                                     j--;
                                 }
                                 break;
                             case 5:
-                                if (*hendersonBP == 5)
+                                if (*Cout5 / 10000 != 4 && *hendersonBP == 5)
                                 {
-                                    *outing = index;
+                                    *outing = index;                                    
                                 } else
                                 {
                                     j--;
                                 }
                                 break;
                             case 6:
-                                if (*damianBP == 5)
+                                if (*Cout6 / 10000 != 4 && *damianBP == 5)
                                 {
-                                    *outing = index;
+                                    *outing = index;                                    
                                 } else
                                 {
                                     j--;
                                 }
                                 break;
                             case 7:
-                                if (*bondBP == 5)
+                                if (*Cout7 / 10000 != 4 && *bondBP == 5)
                                 {
-                                    *outing = index;
+                                    *outing = index;                                    
                                 } else
                                 {
                                     j--;
@@ -553,7 +830,6 @@ void startgame()
 void loadgame()
 {
     FILE *fptr;
-
 
     char buffer[30];    // Buffer for the data from the file to the variable with 30 characters
     int quit = 0;
@@ -709,6 +985,9 @@ void loadgame()
 */
 int main()
 {
+    printf("PLEASE FULLSCREEN FOR THE BEST EXPERIENCE\nMight break when not in fullscreen\n");
+    system("pause");
+
     /* Initialize */
     initscr();              // Start the screen
     start_color();          // Starts color
@@ -719,13 +998,16 @@ int main()
     int quit = 0;
     int index = 1;
     int input;
+    int height, width;
 
     init_pair(1, COLOR_WHITE, COLOR_BLACK); // NORMAL COLOR
     init_pair(2, COLOR_GREEN, COLOR_BLACK); // SELECTED COLOR
     
     /* LOOPS until quit */
     do {
-        mainmenu(&index);
+        getmaxyx(stdscr, height, width);    // Gets the height and width of the terminal screen
+
+        mainmenu(height, width, &index);
         refresh();
         /* Gets the input and does the corresponding actions */
         switch (input = getch())

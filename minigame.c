@@ -587,12 +587,20 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
 }
 
 /*
-    This function is the memorable minigame
+    This function is the memorable minigame where the player chooses the venue and must correctly guess the random value from 1 to 1000.
+    The player have 5 tries for each run of the memorable minigame.
+    Preconditions: all params are a pointer to a positive integers
+    @param *actionPoints - players action points
+    @param *cameraRoll - player's camera roll count
+    @param *outing - player's chosen outing venue [1]-Park, [2]-City Mall, [3]-Ostania Beach, [4]-West Berlint Aquarium, [5]-Ostania Art Museum, [6]-Berlint Mouseney Land, [7]-Park Avenue Dogland
+    @param *code - 
 */
-int memorableGame(int *cameraRoll, int *outing, int *code, int *closestGuess)
+void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, int *closestGuess)
 {
     int outingCode = 0;
     int guess;
+    int perfect = 0;
+    int close = 0;
 
     // If code doesn't exist then generate one
     mvprintw(20,20,"%d", *code);
@@ -610,35 +618,52 @@ int memorableGame(int *cameraRoll, int *outing, int *code, int *closestGuess)
         outingCode = randomValue(0,1000);
     }
 
-    for (int i = *cameraRoll; i > 0 && guess != outingCode; i--)
+    while (!close && !perfect)
     {
-        scanw("%d", &guess);
-        
-        if (guess == outingCode)
+        while (!perfect && *cameraRoll > 0)
         {
-            // PERFECT
-            mvprintw(20,20,"PERFECT");
-        } else if (guess >= outingCode - 10 && guess <= outingCode + 10)
-        {
-            // VERY GOOD
-            mvprintw(20,20,"VERY GOOD");
-        } else if (guess >= outingCode - 100 && guess <= outingCode + 100)
-        {
-            // OKAY
-            mvprintw(20,20,"OKAY");
-        } else
-        {
-            // NOT GOOD
-            mvprintw(20,20,"NOT GOOD");
+            scanw("%d", &guess);
+            
+            if (guess == outingCode)
+            {
+                // PERFECT
+                mvprintw(20,20,"PERFECT");
+                *closestGuess %= 10000;
+                *closestGuess += 40000;
+                perfect = 1;
+            } else if (guess >= outingCode - 10 && guess <= outingCode + 10)
+            {
+                // VERY GOOD
+                mvprintw(20,20,"VERY GOOD");
+                *closestGuess %= 10000;
+                *closestGuess += 30000;
+            } else if (guess >= outingCode - 100 && guess <= outingCode + 100)
+            {
+                // OKAY
+                mvprintw(20,20,"OKAY");
+                *closestGuess %= 10000;
+                *closestGuess += 20000;
+            } else
+            {
+                // NOT GOOD
+                mvprintw(20,20,"NOT GOOD");
+                *closestGuess %= 10000;
+                *closestGuess += 10000;
+            }
+
+            *cameraRoll = *cameraRoll - 1;
+            mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);   // Refreshes the display whenever a camera roll is used
+            refresh();
         }
 
-        *cameraRoll = *cameraRoll - 1;
-        mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);   // Refreshes the display whenever a camera roll is used
-        refresh();
+        getch();
+        close = 1;
+
     }
 
-    mvprintw(20,20,"%d",outingCode);
-    getch();
+    
 
-    return 0;
+    mvprintw(20,20,"%d",outingCode);
+    
+    
 }

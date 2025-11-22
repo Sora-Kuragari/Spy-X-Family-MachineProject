@@ -11,26 +11,29 @@
 
 /*
     This function creates the border of the screen
+    Preconditions: all params are positive integers
+    @param height - the max height of the screen
+    @param width - the max width of the screen
 */
-void bordercreate()
+void bordercreate(int height, int width)
 {
     /* Starts color and create a pair color (foreground, background)*/
     start_color();
     init_pair(1,COLOR_WHITE, COLOR_BLACK);
 
     /* CREATES THE BORDER */
-    for (int i = 0; i <153; i++)
+    for (int i = 0; i <width; i++)
     {
-        for (int j = 0; j<34; j++)
+        for (int j = 0; j<height; j++)
         {
             /* Move the cursor */
             move(j,i);
             
             // Checks if its on the end of the x-axis
-            if (i==0 || i==152)
+            if (i==0 || i==width-1)
             {
                 // Checks if its on the end of the y-axis
-                if (j==0 || j==33)
+                if (j==0 || j==height-1)
                 {
                     attron(COLOR_PAIR(1));      // Turn on set color for the text
                     addch('+');                 // Add the Corner Border
@@ -44,7 +47,7 @@ void bordercreate()
             } else
             {
                 // Checks if its on the end of the y-axis but not on the end of x-axis
-                if (j==0 || j==33)
+                if (j==0 || j==height-1)
                 {
                     attron(COLOR_PAIR(1));      // Turn on set color for the text
                     addch('-');                 // Add the Top / Bottom Border
@@ -57,18 +60,21 @@ void bordercreate()
 
 /*
     This function display the main menu
+    Preconditions: all params are positive integers
+    @param height - the max height of the screen
+    @param width - the max width of the screen
     @param *index is a pointer to index which tells which button is selected
 */
-void mainmenu(int *index)
+void mainmenu(int height, int width, int *index)
 {
-    bordercreate(); // Calls bordercreate function
+    bordercreate(height, width); // Calls bordercreate function
     // Display the Controls
-    mvprintw(33, 36, "| [^][v][<][>] - USE ARROW KEYS TO MOVE |-------| [ENTER] - TO SELECT AN OPTION |");
+    mvprintw(height-1, (width-82)/2, "| [^][v][<][>] - USE ARROW KEYS TO MOVE |-------| [ENTER] - TO SELECT AN OPTION |");
 
     // Create a for loop grid
-    for (int x=0; x < 153; x++)
+    for (int x=0; x < height-1; x++)
     {
-        for (int y = 0; y < 34; y++)
+        for (int y = 0; y < width-1; y++)
         {
             move(y,x); // Move to y,x
 
@@ -182,6 +188,8 @@ void mainmenu(int *index)
 
 /*
     This function creates the UI for the gameloop
+    @param height - the max height of the screen
+    @param width - the max width of the screen
     @param *day - time of day [1]-Morning, [2]-Afternoon, [3]-Evening
     @param *daycount - number of day
     @param *outing - where the outing is gonna be [1]-Park, [2]-City Mall, [3]-Ostania Beach, [4]-West Berlint Aquarium, [5]-Ostania Art Museum, [6]-Berlint Mouseney Land, [7]-Park Avenue Dogland
@@ -194,12 +202,12 @@ void mainmenu(int *index)
     @param *hendersonBP - Mr. Henderson BP
     @param *bondBP - Bond Forger BP
 */
-void mainUI(int* day, int* daycount, int* outing, int* activityPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP)
+void mainUI(int height, int width, int* day, int* daycount, int* outing, int* activityPoint, int* cameraRoll, int* mathLVL, int* mathEXP, int* peLVL, int* peEXP, int* damianBP, int* beckyBP, int* hendersonBP, int* bondBP)
 {
-    bordercreate();
+    bordercreate(height, width);
 
     // Display Controls
-    mvprintw(33, 18, "| [^][v][<][>] - USE ARROW KEYS TO MOVE |-------| [ENTER] - TO SELECT AN OPTION |-------| [q/Q] - BACK TO MAIN MENU |");
+    mvprintw(height-1, (width-118)/2, "| [^][v][<][>] - USE ARROW KEYS TO MOVE |-------| [ENTER] - TO SELECT AN OPTION |-------| [q/Q] - BACK TO MAIN MENU |");
     
     /* Display the Daycount, Time of Day, Type of Day */
     switch (*day) // Sets Time of Day: 1-Morning, 2-Afternoon, 3-Evening
@@ -267,61 +275,61 @@ void mainUI(int* day, int* daycount, int* outing, int* activityPoint, int* camer
     mvprintw(9,2,"CAMERA ROLLS:    %d", *cameraRoll);
 
     /* Current Levels */
-    mvprintw(2, 131, "***LEVELS***");
+    mvprintw(2, width-23, "***LEVELS***");
     // Display math level and math exp and math exp requirement
     if (*mathLVL > 3)
     {
         // if 4(max) display MAX
-        mvprintw(3, 124, "Math LVL:%9d - MAX", *mathLVL - 1); 
+        mvprintw(3, width-30, "Math LVL:%9d - MAX", *mathLVL - 1); 
     } else
     {
         // if below 4 display the exp and exp requirement -> [1]-5, [2]-10, [3]-15
-        mvprintw(3, 124, "Math LVL:%9d - %02d/%02d", *mathLVL, *mathEXP, *mathLVL * 5); 
+        mvprintw(3, width-30, "Math LVL:%9d - %02d/%02d", *mathLVL, *mathEXP, *mathLVL * 5); 
     }
     // Display pe level and pe exp and pe exp requirement
     if (*peLVL > 3)
     {
         // if 4(max) display MAX
-        mvprintw(4, 124, "Pe LVL:%11d - MAX", *peLVL - 1);
+        mvprintw(4, width-30, "Pe LVL:%11d - MAX", *peLVL - 1);
     } else
     {
         // if below 4 display the exp and exp requirement -> [1]-5, [2]-10, [3]-15
-        mvprintw(4, 124, "Pe LVL:%11d - %02d/%02d", *peLVL, *peEXP, *peLVL * 5); 
+        mvprintw(4, width-30, "Pe LVL:%11d - %02d/%02d", *peLVL, *peEXP, *peLVL * 5); 
     }
     
     /* CURRENT BP */
-    mvprintw(5, 128, "***BOND POINTS***");
+    mvprintw(5, width-23, "***BOND POINTS***");
     if (*damianBP == 5)
     {
         // if 5 then add MAX
-        mvprintw(6, 124, "Damian Desmond:%3d - MAX", *damianBP);
+        mvprintw(6, width-30, "Damian Desmond:%3d - MAX", *damianBP);
     } else
     {
-        mvprintw(6, 124, "Damian Desmond:%3d", *damianBP);
+        mvprintw(6, width-30, "Damian Desmond:%3d", *damianBP);
     }
     if (*beckyBP == 5)
     {
         // if 5 then add MAX
-        mvprintw(7, 124, "Becky Blackbell:%2d - MAX", *beckyBP);
+        mvprintw(7, width-30, "Becky Blackbell:%2d - MAX", *beckyBP);
     } else
     {
-        mvprintw(7, 124, "Becky Blackbell:%2d", *beckyBP);
+        mvprintw(7, width-30, "Becky Blackbell:%2d", *beckyBP);
     }
     if (*hendersonBP == 5)
     {
         // if 5 then add MAX
-        mvprintw(8, 124, "Mr. Henderson:%4d - MAX", *hendersonBP);
+        mvprintw(8, width-30, "Mr. Henderson:%4d - MAX", *hendersonBP);
     } else
     {
-        mvprintw(8, 124, "Mr. Henderson:%4d", *hendersonBP);
+        mvprintw(8, width-30, "Mr. Henderson:%4d", *hendersonBP);
     }
     if (*bondBP == 5)
     {
         // if 5 then add MAX
-        mvprintw(9, 124, "Bond Forger:%6d - MAX", *bondBP);
+        mvprintw(9, width-30, "Bond Forger:%6d - MAX", *bondBP);
     } else
     {
-        mvprintw(9, 124, "Bond Forger:%6d", *bondBP);
+        mvprintw(9, width-30, "Bond Forger:%6d", *bondBP);
     }
 
     refresh();
@@ -331,28 +339,6 @@ void mainUI(int* day, int* daycount, int* outing, int* activityPoint, int* camer
 /* DIALOGUE */
 void dialoguefunc()
 {
-    // start_color();
-    // // Dialogue text - White text / Blue background
-    // init_pair(3,COLOR_BLACK,COLOR_CYAN);
-
-    // // Creates the colored box
-    // for (int x = 0; x < 153; x++)
-    // {
-    //     for (int y = 0; y < 34; y++)
-    //     {
-    //         move(y,x);
-    //         if (x >= 25 && x <= 127)
-    //         {
-    //             if (y >= 17 && y <=22)
-    //             {
-    //                 attron(COLOR_PAIR(3));
-    //                 addch(' ');
-    //                 attroff(COLOR_PAIR(3));
-    //             }
-    //         }
-    //     }
-    // }
-
     for (int x = 20; x < 130; x++)
     {
         for (int y = 20; y < 30; y++)
