@@ -1,13 +1,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-
-// Checks if you are using linux because ncurses have different path on linux than windows
-#ifdef linux
-#include <ncurses.h>
-#else
 #include <ncurses\ncurses.h>
-#endif
 
 /*
     This function generates a random value ranged on a minimum and maximum value
@@ -48,6 +42,7 @@ void levelup(int* LVL, int* XP)
     @param *XP - pointer to player's math/pe EXP
     @param correct - number of correct answered
     @param question - number of questions
+    @param gametype - Type of game [1] - Math, [2] - PE, [3] - Outing, [4] - Bonding
     @return additionalAP - number of additional AP given based on correct if and only if player is max level 
 */
 int scoring(int *LVL, int* XP, int correct, int question, int gametype)
@@ -468,7 +463,7 @@ int peGame(int* peLVL, int* peEXP)
     @param num - A number that represent which character [1]-Damian, [2]-Becky, [3]-Henderson, [4]-Bond
     @param *mathLVL - Pointer to the player's math level
     @param *peLVL - Pointer to the player's pe level
-    @param additionalAP - a chance to get addition AP when bonding a max BP character
+    @return additionalAP - a chance to get addition AP when bonding a max BP character
 */
 int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
 {
@@ -486,7 +481,12 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                dialogueBonding(1, 1);
                 showscore(bondLVL, &dummyEXP, 0, 1, 2, 4);
+            } else
+            {
+                dialogueBonding(1, 0);
+                showscore(bondLVL, &dummyEXP, 0, 1, 0, 4);
             }
         } else
         {
@@ -523,9 +523,11 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                dialogueBonding(1, gained);
                 showscore(bondLVL, &dummyEXP, gained, 1, 3, 4);
             } else
             {
+                dialogueBonding(1, gained);
             showscore(bondLVL, &dummyEXP, gained, 1, 0, 4);
             }
 
@@ -539,7 +541,12 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                dialogueBonding(2, 1);
                 showscore(bondLVL, &dummyEXP, 0, 2, 2, 4);
+            } else
+            {
+                dialogueBonding(2, 0);
+                showscore(bondLVL, &dummyEXP, 0, 2, 0, 4);
             }
         } else
         {        
@@ -553,9 +560,11 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                dialogueBonding(2, gained);
                 showscore(bondLVL, &dummyEXP, gained, 2, 3, 4);
             } else
             {
+            dialogueBonding(2, gained);
             showscore(bondLVL, &dummyEXP, gained, 2, 0, 4);
             }
         }
@@ -568,7 +577,12 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                dialogueBonding(3, 1);
                 showscore(bondLVL, &dummyEXP, 0, 3, 2, 4);
+            } else
+            {
+                dialogueBonding(3, 0);
+                showscore(bondLVL, &dummyEXP, 0, 3, 0, 4);
             }
         } else
         {
@@ -602,9 +616,11 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                dialogueBonding(3, gained);
                 showscore(bondLVL, &dummyEXP, gained, 3, 3, 4);
             } else
             {
+            dialogueBonding(3, gained);
             showscore(bondLVL, &dummyEXP, gained, 3, 0, 4);
             }
         }
@@ -617,7 +633,12 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (randomValue(1,2) > 1)
             {
                 additionalAP = 3; // Returning the AP + 2 additional AP
+                dialogueBonding(4, 1);
                 showscore(bondLVL, &dummyEXP, 0, 4, 2, 4);
+            } else
+            {
+                dialogueBonding(4, 0);
+                showscore(bondLVL, &dummyEXP, 0, 4, 0, 4);
             }
         } else
         {        
@@ -628,9 +649,11 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
             if (*bondLVL == 5)
             {
                 additionalAP = 3;
+                dialogueBonding(4, gained);
                 showscore(bondLVL, &dummyEXP, gained, 4, 3, 4);
             } else
             {
+                dialogueBonding(4, gained);
                 showscore(bondLVL, &dummyEXP, gained, 4, 0, 4);
             }
         }
@@ -652,13 +675,14 @@ int bondGame(int *bondLVL, int num, int *mathLVL, int *peLVL)
     @param *actionPoints - players action points
     @param *cameraRoll - player's camera roll count
     @param *outing - player's chosen outing venue [1]-Park, [2]-City Mall, [3]-Ostania Beach, [4]-West Berlint Aquarium, [5]-Ostania Art Museum, [6]-Berlint Mouseney Land, [7]-Park Avenue Dogland
-    @param *code - 
+    @param *code - a seed for the outing codes
+    @param *closestGuess - the closest guess on the outing venue
 */
 void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, int *closestGuess)
 {
     int outingCode = 0;
     int closeGuess = 0;
-    int guess, score;
+    int guess;
     int perfect = 0;
     int close = 0;
     int index = 1;
@@ -669,7 +693,6 @@ void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, i
     echo();
 
     // If code doesn't exist then generate one
-    mvprintw(20,20,"%d", *code);
     if (*code == 0)
     {
         *code = time(0);
@@ -712,38 +735,34 @@ void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, i
 
             scanw("%d", &guess);
 
-            mvprintw(height-19, (width-20)/2,"Closest Angle: %d", closeGuess);
-
             if (abs(guess - outingCode) < abs(closeGuess - outingCode))
             {
                 closeGuess = guess;  // Change is guess is closer than the previous closestGuess
             }
+
+            mvprintw(height-19, (width-20)/2,"Closest Angle: %d", closeGuess);
             
-            if (guess == outingCode)
+            if (closeGuess == outingCode)
             {
                 // PERFECT
-                mvprintw(height-20,(width-3)/2,"Camera Angle Grade: PERFECT");
+                mvprintw(height-20,(width-3)/2,"Camera Angle Grade: PERFECT   ");
                 *closestGuess = 40000;
-                score = 4;
                 perfect = 1;
-            } else if (guess >= outingCode - 10 && guess <= outingCode + 10)
+            } else if (closeGuess >= outingCode - 10 && closeGuess <= outingCode + 10)
             {
                 // VERY GOOD
                 mvprintw(height-20,(width-30)/2,"Camera Angle Grade: VERY GOOD");
                 *closestGuess = 30000;
-                score = 3;
-            } else if (guess >= outingCode - 100 && guess <= outingCode + 100)
+            } else if (closeGuess >= outingCode - 100 && closeGuess <= outingCode + 100)
             {
                 // OKAY
-                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: OKAY");
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: OKAY     ");
                 *closestGuess = 20000;
-                score = 2;
             } else
             {
                 // NOT GOOD
-                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: NOT GOOD");
+                mvprintw(height-20,(width-30)/2,"Camera Angle Grade: NOT GOOD ");
                 *closestGuess = 10000;
-                score = 1;
             }
 
             *cameraRoll = *cameraRoll - 1;
@@ -760,7 +779,7 @@ void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, i
         mvprintw(height-19, (width-50)/2,"%-50c", ' ');
         mvprintw(height-17, (width-50)/2,"%-50c", ' ');
 
-        showscore(&dummyLVL, &dummyEXP, *closestGuess % 10000, *outing, score, 3);
+        showscore(&dummyLVL, &dummyEXP, *closestGuess % 10000, *outing, *closestGuess / 10000, 3);
 
         if (*actionPoints > 0 && !perfect)
         {
@@ -776,7 +795,7 @@ void memorableGame(int *actionPoints, int *cameraRoll, int *outing, int *code, i
                 mvprintw(height-12, (width-38)/2,"> Continue Playing Memorable Minigame");
                 break;
             case 2:
-                mvprintw(height-11, (width-38)/2,"  Go Home");
+                mvprintw(height-11, (width-38)/2,"> Go Home");
                 break;
             
             default:

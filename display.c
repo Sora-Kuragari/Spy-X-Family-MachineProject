@@ -1,11 +1,5 @@
 #include <stdlib.h>
-
-// Checks if you are using linux because ncurses have different path on linux than windows
-#ifdef linux
-#include <ncurses.h>
-#else
 #include <ncurses\ncurses.h>
-#endif
 
 /* DISPLAYS */
 
@@ -337,17 +331,14 @@ void mainUI(int height, int width, int* day, int* daycount, int* outing, int* ac
 
 
 /* DIALOGUE */
-void dialoguefunc()
+void cleanDialogue()
 {
-    for (int x = 20; x < 130; x++)
+    int height, width;
+    getmaxyx(stdscr, height, width);
+    for (int i = 0; i < 34; i++)
     {
-        for (int y = 20; y < 30; y++)
-        {
-            move(y,x);
-            addch(' ');
-        }
+        mvprintw(height-(35-i), (width-100)/2, "%100c", ' ');
     }
-    
 }
 
 /*
@@ -364,6 +355,8 @@ void showscore(int *LVL, int *EXP, int expGained, int correct, int question, int
 {
     int height, width;
     getmaxyx(stdscr, height, width);
+
+    cleanDialogue();
 
     switch (gametype)
     {

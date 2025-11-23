@@ -1,15 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "display.c"
-#include "minigame.c"
 #include "dialogue.c"
-
-// Checks if you are using linux because ncurses have different path on linux than windows
-#ifdef linux
-#include <ncurses.h>
-#else
+#include "minigame.c"
 #include <ncurses\ncurses.h>
-#endif
 
 /*********************************************
 Functions used in ncurses:
@@ -81,6 +75,7 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
     int options;            // Number of options
     int index = 1;          // index of the options
     int height, width;      // the max height and max width of the screen (terminal)
+    int inDialogue = 0;
 
     getmaxyx(stdscr, height, width);
 
@@ -102,7 +97,12 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
             *day = j; // Syncronizes day with j (Important specially when game is continued from a saved file)
 
             mainUI(height, width, day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP);
-            dialoguefunc();
+
+            if (!inDialogue)
+            {
+                dialogueOptions(*day, *daycount);
+                inDialogue = 1;
+            }
 
             /* Display the options */
             if ((*daycount % 4 != 0) && *day == 1) // If its school day and morning
@@ -548,7 +548,10 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
-                                    bondGame(damianBP, 1, mathLVL, peLVL);
+                                    cleanDialogue();
+                                    *actionPoint += bondGame(damianBP, 1, mathLVL, peLVL);
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else
                                 {
                                     j--; // RESET since there is no action point
@@ -563,7 +566,10 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
-                                    bondGame(beckyBP, 2, mathLVL, peLVL);
+                                    cleanDialogue();
+                                    *actionPoint += bondGame(beckyBP, 2, mathLVL, peLVL);                            
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else
                                 {
                                     j--; // RESET since there is no action point
@@ -578,13 +584,18 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
-                                    bondGame(hendersonBP, 3, mathLVL, peLVL);
+                                    cleanDialogue();
+                                    *actionPoint += bondGame(hendersonBP, 3, mathLVL, peLVL);                                   
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else
                                 {
                                     j--; // RESET since there is no action point
                                 }
                                 break;
                             default:
+                                cleanDialogue();
+                                inDialogue = 0;
                                 break;
                             }
                         } else
@@ -600,7 +611,10 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
-                                    mathGame(mathLVL, mathEXP);
+                                    cleanDialogue();
+                                    *actionPoint += mathGame(mathLVL, mathEXP);                                    
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else
                                 {
                                     j--; // RESET since there is no action point
@@ -615,7 +629,10 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
-                                    peGame(peLVL, peEXP);
+                                    cleanDialogue();
+                                    *actionPoint += peGame(peLVL, peEXP);                                    
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else
                                 {
                                     j--; // RESET since there is no action point
@@ -630,13 +647,18 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
-                                    bondGame(bondBP, 4, mathLVL, peLVL);
+                                    cleanDialogue();
+                                    *actionPoint += bondGame(bondBP, 4, mathLVL, peLVL);                                    
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else
                                 {
                                     j--; // RESET since there is no action point
                                 }
                                 break;
                             default:
+                                cleanDialogue();
+                                inDialogue = 0;
                                 break;
                             }
                         }
@@ -644,7 +666,8 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                     {
                         if (*day == 1) // Check whether its Morning or Afternoon or Evening (Family Meeting)
                         {
-                            // Do some dialogue
+                            cleanDialogue();
+                            inDialogue = 0;
                         } else if (*day == 2)
                         {
                             if (index == 1)
@@ -657,6 +680,7 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     {
                                         mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
                                     }
+                                    cleanDialogue();
                                     // Starts the memorable minigame
                                     switch (*outing)
                                     {
@@ -684,11 +708,17 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                     default:
                                         break;
                                     }
+                                    cleanDialogue();
+                                    inDialogue = 0;
                                 } else 
                                 {
                                     j--;
                                 }
                                 
+                            } else
+                            {
+                                cleanDialogue();
+                                inDialogue = 0;
                             }
 
                             *outing = 0;        // memorable is over, choose again
@@ -706,6 +736,8 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 } else
                                 {
                                     *outing = index;
+                                    cleanDialogue();
+                                    inDialogue = 0;  
                                 }
                                 break;
                             case 2:
@@ -715,6 +747,8 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 } else
                                 {
                                     *outing = index;
+                                    cleanDialogue();
+                                    inDialogue = 0;  
                                 }
                                 break;
                             case 3:
@@ -724,12 +758,16 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                                 } else
                                 {
                                     *outing = index;
+                                    cleanDialogue();
+                                    inDialogue = 0;  
                                 }
                                 break;
                             case 4:
                                 if (*Cout4 / 10000 != 4 && *beckyBP == 5)
                                 {
-                                    *outing = index;                                    
+                                    *outing = index;
+                                    cleanDialogue();
+                                    inDialogue = 0;                                    
                                 } else
                                 {
                                     j--;
@@ -738,7 +776,9 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                             case 5:
                                 if (*Cout5 / 10000 != 4 && *hendersonBP == 5)
                                 {
-                                    *outing = index;                                    
+                                    *outing = index;
+                                    cleanDialogue();
+                                    inDialogue = 0;                                  
                                 } else
                                 {
                                     j--;
@@ -747,7 +787,9 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                             case 6:
                                 if (*Cout6 / 10000 != 4 && *damianBP == 5)
                                 {
-                                    *outing = index;                                    
+                                    *outing = index;  
+                                    cleanDialogue();
+                                    inDialogue = 0;                                    
                                 } else
                                 {
                                     j--;
@@ -756,7 +798,9 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
                             case 7:
                                 if (*Cout7 / 10000 != 4 && *bondBP == 5)
                                 {
-                                    *outing = index;                                    
+                                    *outing = index;
+                                    cleanDialogue();
+                                    inDialogue = 0;                                   
                                 } else
                                 {
                                     j--;
@@ -797,10 +841,10 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
         }
 
         // Checks if its fourth day to replenish the action point if its below 3 and everyday except 3rd day plus one action point
-        if (*daycount % 3 == 0)
+        if (*daycount % 4 == 3)
         {
             // DO NOTHING
-        } else if (*daycount % 4 == 0)
+        } else if (*daycount % 4 == 0 || *daycount == 0)
         {
             if (*actionPoint < 3)
             {
@@ -811,8 +855,6 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
             *actionPoint += 1;
         }
 
-        dialoguefunc();
-
         *daycount += 1; // Next Day
         *day = 1;       // Go back to Morning
 
@@ -821,7 +863,10 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
     // Checks if the player did not quit and played through 41 days ( 0 - 40 day )
     if (quit != 1)
     {
-        // CONGRATS
+        clear();
+        bordercreate(height, width);
+
+
     }
 
     clear();    // Clear everything
@@ -857,7 +902,7 @@ void startgame()
     int Cout6 = 0;
     int Cout7 = 0;
 
-    mvprintw(10,20,"Enter File Name (No Spaces) (Default: TemporaryFile): ");
+    mvprintw(30,20,"Enter File Name (No Spaces) (Default: TemporaryFile): ");
     scanw("%s", name);
 
     noecho();
