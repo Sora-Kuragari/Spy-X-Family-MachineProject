@@ -1,3 +1,24 @@
+/*********************************************************************
+******
+This is to certify that this project is my own work, based on my personal
+efforts in studying and applying the concepts learned. I have
+constructed the functions and their respective algorithms and
+corresponding code by myself. The program was run, tested, and debugged
+by my own efforts. I further certify that I have not copied in part or
+whole or otherwise plagiarized the work of other students and/or persons.
+John Hayden R. Acosta, DLSU ID# 12504971
+**********************************************************************
+*****/
+
+/*
+Description: A TUI-based visual novel 
+Programmed by: John Hayden Acosta S18
+Last modified: 11/10/2025
+Version: 0.7
+[Acknowledgements: <list of sites or borrowed libraries and sources>]
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "display.c"
@@ -948,7 +969,7 @@ void loadgame()
     {
         echo(); // Enables visible typing
 
-        mvprintw(10,20,"Enter File Name (No Spaces): ");
+        mvprintw(30,20,"Enter File Name (No Spaces): ");
         scanw("%s", name);
 
         noecho(); // Disable Visible typing
