@@ -1,4 +1,25 @@
-
+/*
+Description: A TUI-based visual novel based on Spy x Family where you play as Anya going through 40 days to complete her project.
+Programmed by: John Hayden Acosta S18
+Last modified: 11/24/2025
+Version: 33.13
+[Acknowledgements:  <stdio.h>
+                    <stdlib.h>
+                    <math.h>
+                    <time.h>
+                    <ncurses\ncurses.h>
+                    <string.h>
+                    https://sw.kovidgoyal.net/kitty/kittens/icat/
+                    https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
+                    https://www.w3schools.com/c/c_ref_time.php
+                    https://www.w3schools.com/c/c_ref_stdlib.php
+                    https://stackoverflow.com/questions/8666378/detect-windows-or-linux-in-c-c
+                    https://docs.python.org/3/library/curses.html#
+                    https://stackoverflow.com/questions/75556484/how-to-install-ncurses-on-windows
+                    https://www.w3schools.com/c/c_files_read.php
+                    While Coding: https://www.youtube.com/playlist?list=PLPOaeu2wwAFEbWzKve8So3g_g-oUUxon_
+                    ]
+*/
 
 
 #include <stdio.h>
@@ -103,8 +124,14 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
 
             if (!inDialogue)
             {
-                dialogueOptions(*day, *daycount);
-                inDialogue = 1;
+                if (*daycount == 40 && j == 3)
+                {
+                    quit = 1;
+                } else
+                {
+                    dialogueOptions(*day, *daycount);
+                    inDialogue = 1;
+                }
             }
 
             /* Display the options */
@@ -517,328 +544,333 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
 
 
             /* Gets the input and does the corresponding actions */
-            switch(input = getch())
+            if (quit == 1)
             {
-                case KEY_UP:    // Arrow Up
-                    index--;
-                    if (index == 0) // If its go past the first option, make it select the last option
-                    {
-                        index = options;
-                    }
-                    break;
-                case KEY_DOWN:  // Arrow Down
-                    index++;
-                    if (index > options) // If its go past the last option, make it select the first option
-                    {
-                        index = 1;
-                    }
-                    break;
-                case '\n':      // Enter Key
-                    
-                    // CHECK WHAT TIME AND DAY
-                    if (*daycount % 4 != 0) // School Day
-                    {
-                        if (*day == 1) // Check whether its Morning or Afternoon
+
+            } else {
+                switch(input = getch())
+                {
+                    case KEY_UP:    // Arrow Up
+                        index--;
+                        if (index == 0) // If its go past the first option, make it select the last option
                         {
-                            switch (index)
-                            {
-                            case 1:
-                                if (*actionPoint > 0)
-                                {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
-                                    {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    *actionPoint += bondGame(damianBP, 1, mathLVL, peLVL);
-                                    cleanDialogue();
-                                    inDialogue = 0;
-                                } else
-                                {
-                                    j--; // RESET since there is no action point
-                                }
-                                break;                                
-                            case 2:
-                                if (*actionPoint > 0)
-                                {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
-                                    {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    *actionPoint += bondGame(beckyBP, 2, mathLVL, peLVL);                            
-                                    cleanDialogue();
-                                    inDialogue = 0;
-                                } else
-                                {
-                                    j--; // RESET since there is no action point
-                                }
-                                break;
-                            case 3:
-                                if (*actionPoint > 0)
-                                {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
-                                    {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    *actionPoint += bondGame(hendersonBP, 3, mathLVL, peLVL);                                   
-                                    cleanDialogue();
-                                    inDialogue = 0;
-                                } else
-                                {
-                                    j--; // RESET since there is no action point
-                                }
-                                break;
-                            default:
-                                cleanDialogue();
-                                inDialogue = 0;
-                                break;
-                            }
-                        } else
-                        {
-                            switch (index)
-                            {
-                            case 1:
-                                if (*actionPoint > 0)
-                                {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
-                                    {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    *actionPoint += mathGame(mathLVL, mathEXP);                                    
-                                    cleanDialogue();
-                                    inDialogue = 0;
-                                } else
-                                {
-                                    j--; // RESET since there is no action point
-                                }                        
-                                break;
-                            case 2:
-                                if (*actionPoint > 0)
-                                {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
-                                    {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    *actionPoint += peGame(peLVL, peEXP);                                    
-                                    cleanDialogue();
-                                    inDialogue = 0;
-                                } else
-                                {
-                                    j--; // RESET since there is no action point
-                                }
-                                break;
-                            case 3:
-                                if (*actionPoint > 0)
-                                {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
-                                    {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    *actionPoint += bondGame(bondBP, 4, mathLVL, peLVL);                                    
-                                    cleanDialogue();
-                                    inDialogue = 0;
-                                } else
-                                {
-                                    j--; // RESET since there is no action point
-                                }
-                                break;
-                            default:
-                                cleanDialogue();
-                                inDialogue = 0;
-                                break;
-                            }
+                            index = options;
                         }
-                    } else
-                    {
-                        if (*day == 1) // Check whether its Morning or Afternoon or Evening (Family Meeting)
+                        break;
+                    case KEY_DOWN:  // Arrow Down
+                        index++;
+                        if (index > options) // If its go past the last option, make it select the first option
                         {
-                            cleanDialogue();
-                            inDialogue = 0;
-                        } else if (*day == 2)
+                            index = 1;
+                        }
+                        break;
+                    case '\n':      // Enter Key
+                        
+                        // CHECK WHAT TIME AND DAY
+                        if (*daycount % 4 != 0) // School Day
                         {
-                            if (index == 1)
+                            if (*day == 1) // Check whether its Morning or Afternoon
                             {
-                                if (*actionPoint > 0)
+                                switch (index)
                                 {
-                                    *actionPoint -= 1;
-                                    // Clean the options
-                                    for (int i = 0; i < 8; i++)
+                                case 1:
+                                    if (*actionPoint > 0)
                                     {
-                                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                                    }
-                                    cleanDialogue();
-                                    // Starts the memorable minigame
-                                    switch (*outing)
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        *actionPoint += bondGame(damianBP, 1, mathLVL, peLVL);
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else
                                     {
-                                    case 1:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout1);
-                                        break;
-                                    case 2:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout2);
-                                        break;
-                                    case 3:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout3);
-                                        break;
-                                    case 4:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout4);
-                                        break;
-                                    case 5:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout5);
-                                        break;
-                                    case 6:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout6);
-                                        break;
-                                    case 7:
-                                        memorableGame(actionPoint, cameraRoll, outing, code, Cout7);
-                                        break;
-                                    default:
-                                        break;
+                                        j--; // RESET since there is no action point
                                     }
+                                    break;                                
+                                case 2:
+                                    if (*actionPoint > 0)
+                                    {
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        *actionPoint += bondGame(beckyBP, 2, mathLVL, peLVL);                            
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else
+                                    {
+                                        j--; // RESET since there is no action point
+                                    }
+                                    break;
+                                case 3:
+                                    if (*actionPoint > 0)
+                                    {
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        *actionPoint += bondGame(hendersonBP, 3, mathLVL, peLVL);                                   
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else
+                                    {
+                                        j--; // RESET since there is no action point
+                                    }
+                                    break;
+                                default:
                                     cleanDialogue();
                                     inDialogue = 0;
-                                } else 
-                                {
-                                    j--;
+                                    break;
                                 }
-                                
                             } else
                             {
-                                cleanDialogue();
-                                inDialogue = 0;
+                                switch (index)
+                                {
+                                case 1:
+                                    if (*actionPoint > 0)
+                                    {
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        *actionPoint += mathGame(mathLVL, mathEXP);                                    
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else
+                                    {
+                                        j--; // RESET since there is no action point
+                                    }                        
+                                    break;
+                                case 2:
+                                    if (*actionPoint > 0)
+                                    {
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        *actionPoint += peGame(peLVL, peEXP);                                    
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else
+                                    {
+                                        j--; // RESET since there is no action point
+                                    }
+                                    break;
+                                case 3:
+                                    if (*actionPoint > 0)
+                                    {
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        *actionPoint += bondGame(bondBP, 4, mathLVL, peLVL);                                    
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else
+                                    {
+                                        j--; // RESET since there is no action point
+                                    }
+                                    break;
+                                default:
+                                    cleanDialogue();
+                                    inDialogue = 0;
+                                    break;
+                                }
                             }
-
-                            *outing = 0;        // memorable is over, choose again
                         } else
                         {
-                            // Set the venue of the next Outing to whatever index is
-                            // If outing venue is already perfect then it cannot be picked again
-                            // [4][5][6][7] have requirements before getting selected
-                            switch (index)
+                            if (*day == 1) // Check whether its Morning or Afternoon or Evening (Family Meeting)
                             {
-                            case 1:
-                                if (*Cout1 / 10000 == 4)
+                                cleanDialogue();
+                                inDialogue = 0;
+                            } else if (*day == 2)
+                            {
+                                if (index == 1)
                                 {
-                                    j--;
+                                    if (*actionPoint > 0)
+                                    {
+                                        *actionPoint -= 1;
+                                        // Clean the options
+                                        for (int i = 0; i < 8; i++)
+                                        {
+                                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                                        }
+                                        cleanDialogue();
+                                        // Starts the memorable minigame
+                                        switch (*outing)
+                                        {
+                                        case 1:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout1);
+                                            break;
+                                        case 2:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout2);
+                                            break;
+                                        case 3:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout3);
+                                            break;
+                                        case 4:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout4);
+                                            break;
+                                        case 5:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout5);
+                                            break;
+                                        case 6:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout6);
+                                            break;
+                                        case 7:
+                                            memorableGame(actionPoint, cameraRoll, outing, code, Cout7);
+                                            break;
+                                        default:
+                                            break;
+                                        }
+                                        cleanDialogue();
+                                        inDialogue = 0;
+                                    } else 
+                                    {
+                                        j--;
+                                    }
+                                    
                                 } else
                                 {
+                                    cleanDialogue();
+                                    inDialogue = 0;
+                                }
+
+                                *outing = 0;        // memorable is over, choose again
+                            } else
+                            {
+                                // Set the venue of the next Outing to whatever index is
+                                // If outing venue is already perfect then it cannot be picked again
+                                // [4][5][6][7] have requirements before getting selected
+                                switch (index)
+                                {
+                                case 1:
+                                    if (*Cout1 / 10000 == 4)
+                                    {
+                                        j--;
+                                    } else
+                                    {
+                                        *outing = index;
+                                        cleanDialogue();
+                                        inDialogue = 0;  
+                                    }
+                                    break;
+                                case 2:
+                                    if (*Cout2 / 10000 == 4)
+                                    {
+                                        j--;
+                                    } else
+                                    {
+                                        *outing = index;
+                                        cleanDialogue();
+                                        inDialogue = 0;  
+                                    }
+                                    break;
+                                case 3:
+                                    if (*Cout3 / 10000 == 4)
+                                    {
+                                        j--;
+                                    } else
+                                    {
+                                        *outing = index;
+                                        cleanDialogue();
+                                        inDialogue = 0;  
+                                    }
+                                    break;
+                                case 4:
+                                    if (*Cout4 / 10000 != 4 && *beckyBP == 5)
+                                    {
+                                        *outing = index;
+                                        cleanDialogue();
+                                        inDialogue = 0;                                    
+                                    } else
+                                    {
+                                        j--;
+                                    }
+                                    break;
+                                case 5:
+                                    if (*Cout5 / 10000 != 4 && *hendersonBP == 5)
+                                    {
+                                        *outing = index;
+                                        cleanDialogue();
+                                        inDialogue = 0;                                  
+                                    } else
+                                    {
+                                        j--;
+                                    }
+                                    break;
+                                case 6:
+                                    if (*Cout6 / 10000 != 4 && *damianBP == 5)
+                                    {
+                                        *outing = index;  
+                                        cleanDialogue();
+                                        inDialogue = 0;                                    
+                                    } else
+                                    {
+                                        j--;
+                                    }
+                                    break;
+                                case 7:
+                                    if (*Cout7 / 10000 != 4 && *bondBP == 5)
+                                    {
+                                        *outing = index;
+                                        cleanDialogue();
+                                        inDialogue = 0;                                   
+                                    } else
+                                    {
+                                        j--;
+                                    }
+                                    break;
+                                
+                                default:
                                     *outing = index;
-                                    cleanDialogue();
-                                    inDialogue = 0;  
+                                    break;
                                 }
-                                break;
-                            case 2:
-                                if (*Cout2 / 10000 == 4)
-                                {
-                                    j--;
-                                } else
-                                {
-                                    *outing = index;
-                                    cleanDialogue();
-                                    inDialogue = 0;  
-                                }
-                                break;
-                            case 3:
-                                if (*Cout3 / 10000 == 4)
-                                {
-                                    j--;
-                                } else
-                                {
-                                    *outing = index;
-                                    cleanDialogue();
-                                    inDialogue = 0;  
-                                }
-                                break;
-                            case 4:
-                                if (*Cout4 / 10000 != 4 && *beckyBP == 5)
-                                {
-                                    *outing = index;
-                                    cleanDialogue();
-                                    inDialogue = 0;                                    
-                                } else
-                                {
-                                    j--;
-                                }
-                                break;
-                            case 5:
-                                if (*Cout5 / 10000 != 4 && *hendersonBP == 5)
-                                {
-                                    *outing = index;
-                                    cleanDialogue();
-                                    inDialogue = 0;                                  
-                                } else
-                                {
-                                    j--;
-                                }
-                                break;
-                            case 6:
-                                if (*Cout6 / 10000 != 4 && *damianBP == 5)
-                                {
-                                    *outing = index;  
-                                    cleanDialogue();
-                                    inDialogue = 0;                                    
-                                } else
-                                {
-                                    j--;
-                                }
-                                break;
-                            case 7:
-                                if (*Cout7 / 10000 != 4 && *bondBP == 5)
-                                {
-                                    *outing = index;
-                                    cleanDialogue();
-                                    inDialogue = 0;                                   
-                                } else
-                                {
-                                    j--;
-                                }
-                                break;
-                            
-                            default:
-                                *outing = index;
-                                break;
+
+                                *cameraRoll = 5;    // Refill
                             }
-
-                            *cameraRoll = 5;    // Refill
                         }
-                    }
 
-                    // Reset the index back to the top
-                    index = 1;
+                        // Reset the index back to the top
+                        index = 1;
 
-                    // Clean the options
-                    for (int i = 0; i < 8; i++)
-                    {
-                        mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
-                    }
-                    
-                    j++; // Only proceed to next when entered
-                    break;
+                        // Clean the options
+                        for (int i = 0; i < 8; i++)
+                        {
+                            mvprintw(height-(6+i),(width-50)/2,"%-50c",' ');
+                        }
+                        
+                        j++; // Only proceed to next when entered
+                        break;
 
-                case 'Q':       // Capital Q
-                case 'q':       // Q
-                    savegame(name, day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP, code, Cout1, Cout2, Cout3, Cout4, Cout5, Cout6, Cout7);
-                    quit = 1;
-                    break;
-                default:
-                    break;
+                    case 'Q':       // Capital Q
+                    case 'q':       // Q
+                        savegame(name, day, daycount, outing, actionPoint, cameraRoll, mathLVL, mathEXP, peLVL, peEXP, damianBP, beckyBP, hendersonBP, bondBP, code, Cout1, Cout2, Cout3, Cout4, Cout5, Cout6, Cout7);
+                        quit = 1;
+                        break;
+                    default:
+                        break;
 
+                }
             }
 
         }
@@ -864,11 +896,185 @@ void gameloop(char* name, int* day, int* daycount, int* outing, int* actionPoint
     }
 
     // Checks if the player did not quit and played through 41 days ( 0 - 40 day )
-    if (quit != 1)
+    if (quit == 1 && *daycount > 40)
     {
+        int complete = 0;
+
         clear();
         bordercreate(height, width);
+        mvprintw(height-35, (width-23)/2, "[ OVERALL CONCLUSION ]");
+        if (*mathLVL == 4)
+        {
+            mvprintw(height-33, (width-16)/2, "Math Level: MAX");
+        } else
+        {
+            mvprintw(height-33, (width-16)/2, "Math Level: %d", *mathLVL);
+        }
+        if (*peLVL == 4)
+        {
+            mvprintw(height-32, (width-16)/2, "PE Level: MAX");
+        } else
+        {
+            mvprintw(height-32, (width-16)/2, "PE Level: %d", *mathLVL);
+        }
+        mvprintw(height-31, (width-14)/2, "Damian BP: %d", *damianBP);
+        mvprintw(height-30, (width-13)/2, "Becky BP: %d", *beckyBP);
+        mvprintw(height-29, (width-17)/2, "Henderson BP: %d", *hendersonBP);
+        mvprintw(height-28, (width-12)/2, "Bond BP: %d", *bondBP);
+        
+        switch (*Cout1 / 10000)
+        {
+        case 1:
+            mvprintw(height-27, (width-15)/2, "Park: Not Good");
+            break;
+        case 2:
+            mvprintw(height-27, (width-11)/2, "Park: Okay");
+            break;
+        case 3:
+            mvprintw(height-27, (width-16)/2, "Park: Very Good");
+            break;
+        case 4:
+            mvprintw(height-27, (width-14)/2, "Park: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-27, (width-15)/2, "Park: Not Good");
+            break;
+        }
+        switch (*Cout2 / 10000)
+        {
+        case 1:
+            mvprintw(height-26, (width-20)/2, "City Mall: Not Good");
+            break;
+        case 2:
+            mvprintw(height-26, (width-16)/2, "City Mall: Okay");
+            break;
+        case 3:
+            mvprintw(height-26, (width-21)/2, "City Mall: Very Good");
+            break;
+        case 4:
+            mvprintw(height-26, (width-19)/2, "City Mall: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-26, (width-20)/2, "City Mall: Not Good");
+            break;
+        }
+        switch (*Cout3 / 10000)
+        {
+        case 1:
+            mvprintw(height-25, (width-24)/2, "Ostania Beach: Not Good");
+            break;
+        case 2:
+            mvprintw(height-25, (width-20)/2, "Ostania Beach: Okay");
+            break;
+        case 3:
+            mvprintw(height-25, (width-25)/2, "Ostania Beach: Very Good");
+            break;
+        case 4:
+            mvprintw(height-25, (width-23)/2, "Ostania Beach: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-25, (width-24)/2, "Ostania Beach: Not Good");
+            break;
+        }
+        switch (*Cout4 / 10000)
+        {
+        case 1:
+            mvprintw(height-24, (width-32)/2, "West Berlint Aquarium: Not Good");
+            break;
+        case 2:
+            mvprintw(height-24, (width-28)/2, "West Berlint Aquarium: Okay");
+            break;
+        case 3:
+            mvprintw(height-24, (width-33)/2, "West Berlint Aquarium: Very Good");
+            break;
+        case 4:
+            mvprintw(height-24, (width-31)/2, "West Berlint Aquarium: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-24, (width-32)/2, "West Berlint Aquarium: Not Good");
+            break;
+        }
+        switch (*Cout5 / 10000)
+        {
+        case 1:
+            mvprintw(height-23, (width-29)/2, "Ostania Art Museum: Not Good");
+            break;
+        case 2:
+            mvprintw(height-23, (width-25)/2, "Ostania Art Museum: Okay");
+            break;
+        case 3:
+            mvprintw(height-23, (width-30)/2, "Ostania Art Museum: Very Good");
+            break;
+        case 4:
+            mvprintw(height-23, (width-28)/2, "Ostania Art Museum: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-23, (width-29)/2, "Ostania Art Museum: Not Good");
+            break;
+        }
+        switch (*Cout6 / 10000)
+        {
+        case 1:
+            mvprintw(height-22, (width-32)/2, "Berlint Mouseney Land: Not Good");
+            break;
+        case 2:
+            mvprintw(height-22, (width-28)/2, "Berlint Mouseney Land: Okay");
+            break;
+        case 3:
+            mvprintw(height-22, (width-33)/2, "Berlint Mouseney Land: Very Good");
+            break;
+        case 4:
+            mvprintw(height-22, (width-31)/2, "Berlint Mouseney Land: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-22, (width-32)/2, "Berlint Mouseney Land: Not Good");
+            break;
+        }
+        switch (*Cout7 / 10000)
+        {
+        case 1:
+            mvprintw(height-21, (width-30)/2, "Park Avenue Dogland: Not Good");
+            break;
+        case 2:
+            mvprintw(height-21, (width-26)/2, "Park Avenue Dogland: Okay");
+            break;
+        case 3:
+            mvprintw(height-21, (width-31)/2, "Park Avenue Dogland: Very Good");
+            break;
+        case 4:
+            mvprintw(height-21, (width-29)/2, "Park Avenue Dogland: Perfect");
+            complete++;
+            break;
+        default:
+            mvprintw(height-21, (width-30)/2, "Park Avenue Dogland: Not Good");
+            break;
+        }
 
+        if (*mathLVL >= 4 && *peLVL >= 4)
+        {
+            if (complete >= 7)
+            {
+                mvprintw(height-19, (width-15)/2, "PERFECT ENDING!");
+            } else if (complete >= 3)
+            {
+                mvprintw(height-19, (width-15)/2, "NEUTRAL ENDING!");
+            } else
+            {
+                mvprintw(height-19, (width-15)/2, "BAD ENDING!");
+            }
+        } else
+        {
+            mvprintw(height-19, (width-15)/2, "BAD ENDING!");
+        }
+        
+        mvprintw(height-17, (width-27)/2, "Press any key to Quit!");
+        getch();
 
     }
 
@@ -1066,7 +1272,7 @@ void loadgame()
             gameloop(name, &day, &daycount, &outing, &activityPoint, &cameraRoll, &mathLVL, &mathEXP, &peLVL, &peEXP, &damianBP, &beckyBP, &hendersonBP, &bondBP, &code, &Cout1, &Cout2, &Cout3, &Cout4, &Cout5, &Cout6, &Cout7);
         }
     }
-    mvprintw(10,20,"%50c", ' '); // Fill with Empty Space
+    mvprintw(30,20,"%50c", ' '); // Fill with Empty Space
     fclose(fptr);
 }
 

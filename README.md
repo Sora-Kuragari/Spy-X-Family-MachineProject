@@ -1,15 +1,12 @@
-# Spy-X-Family-MachineProject
+re# Spy-X-Family-MachineProject
 CCPROG1 - Machine Project
-
-
-
-<h1><b><i>STILL UNDERCONSTRUCTION</i></b></h1>
 
 
 
 <h1>Prerequisites:</h1>
 
 > GCC
+> ncurses
 
 
 
@@ -26,3 +23,6 @@ CCPROG1 - Machine Project
   ```gcc -Wall -std=c99 main.c -o main.exe -lncurses```
 
   ```./main.exe```
+
+
+PS: Might have bugs and other broken stuff

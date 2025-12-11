@@ -502,7 +502,7 @@ void showscore(int *LVL, int *EXP, int expGained, int correct, int question, int
                 break;
             }
 
-            mvprintw(height-24, (width-27)/2, "Press [Enter] to continue!");
+            mvprintw(height-24, (width-27)/2, "Press any key to continue!");
             break;
     }
     noecho();
